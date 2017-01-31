@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="vider_liste" type="id">Vider la liste</item>
+    <item name="vider_element_barres" type="id">Supprimer les éléments achetés</item>
+</resources>
