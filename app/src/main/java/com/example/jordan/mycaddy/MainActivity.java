@@ -1,8 +1,10 @@
 package com.example.jordan.mycaddy;
 
+import android.database.Cursor;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -17,11 +19,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ProduitDB produit_predef;
+
 
 
     /**
@@ -66,8 +71,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        produit_predef = new ProduitDB(this);
-        produit_predef.open();
+
+
 
     }
 
@@ -125,13 +130,61 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-            return rootView;
+
+            /* Contenu de l'onglet à insérer ici */
+
+            if(getArguments().getInt(ARG_SECTION_NUMBER) == 1) {
+
+                final View rootView = inflater.inflate(R.layout.fragment_produits, container, false);
+                //addButton(rootView);
+
+                final Button button = (Button) rootView.findViewById(R.id.button_ajouter_produit);
+                button.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        ProduitDB produit_predef;
+                        Cursor c;
+                        produit_predef = new ProduitDB(getContext());
+                        produit_predef.open();
+                        final EditText maVariableEditText = (EditText) rootView.findViewById(R.id.editText_ajouter_produit);
+
+                        ListView maVariableListView = (ListView) rootView.findViewById(R.id.listView_ajouter_produit);
+
+                        // Ajout dans la BDD
+                        String txt = maVariableEditText.getText().toString();
+                        produit_predef.addproduit(txt);
+
+                        // Récupération des données dans la BDD
+                        c = produit_predef.fetchAllNotes();
+
+                        // Affichage des données
+                        getActivity().startManagingCursor(c);
+
+                        String[] from = new String[] { ProduitDB.KEY_NAME };
+                        int[] to = new int[] { R.id.name };
+
+                        // Now create an array adapter and set it to display using our row
+                        SimpleCursorAdapter notes = new SimpleCursorAdapter(getContext(), R.layout.produit_row, c, from, to);
+                        maVariableListView.setAdapter(notes);
+
+                        maVariableEditText.setText(""); // 3 - remise à vide de l'EditText
+                    }
+                });
+
+                return rootView;
+            }
+            else{
+                View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+                TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+                return rootView;
+            }
         }
     }
-
+/*
+    public static void addButton (View view){
+        final EditText maVariableEditText = (EditText) view.findViewById(R.id.editText_ajouter_produit);
+        maVariableEditText.setText("11"); // 3 - remise à vide de l'EditText
+    }
+*/
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
