@@ -7,11 +7,10 @@
     app:theme="@style/TabTheme">
 
     <Button
-        android:text="Button"
+        android:text="Ajouter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/button_ajouter_produit"
-        android:onClick="addButton"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
@@ -20,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
-        android:text="Name"
+        android:text=""
         android:ems="10"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"

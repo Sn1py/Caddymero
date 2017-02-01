@@ -19,7 +19,7 @@
 
     <style name="TabTheme">
         <item name="android:textColor">#FFFFFF</item>
-        <item name="android:background">#7A869C</item>
+        <item name="android:background">#c0c7d2</item>  // #7A869C
     </style>
 
     <style name="ItemTheme">

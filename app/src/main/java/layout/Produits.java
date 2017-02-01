@@ -7,15 +7,23 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.view.ContextMenu;
+import android.view.InflateException;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.jordan.mycaddy.ProduitDB;
 import com.example.jordan.mycaddy.R;
+
+import static com.example.jordan.mycaddy.R.id.container;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -63,9 +71,12 @@ public class Produits extends Fragment {
         return fragment;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //getActivity().setContentView(R.layout.activity_main);
 
         produit_predef = new ProduitDB(getContext());
         produit_predef.open();
@@ -74,41 +85,107 @@ public class Produits extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
+        //View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        //setContentView(R.layout.fragment_produits);
+        /*
+        ListView maVariableListView = (ListView) getActivity().findViewById(R.id.listView_ajouter_produit);
+        registerForContextMenu(maVariableListView);
+        */
+
+        //Gestion du clique sur le bouton d'ajout d'un nouveau produit pré-défini
+/**
+        // Définition du bouton
+        final Button button = (Button) getActivity().findViewById(R.id.button_ajouter_produit);
+        // Définition du onClickListener
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                ProduitDB produit_predef;
+                Cursor c;
+                produit_predef = new ProduitDB(getContext());
+                produit_predef.open();
+                final EditText maVariableEditText = (EditText) getActivity().findViewById(R.id.editText_ajouter_produit);
+                ListView maVariableListView = (ListView) getActivity().findViewById(R.id.listView_ajouter_produit);
+
+                // Ajout dans la BDD
+                String txt = maVariableEditText.getText().toString();
+                produit_predef.addproduit(txt);
+
+                // Récupération des données dans la BDD
+                c = produit_predef.fetchAllNotes();
+
+                // Affichage des données
+                getActivity().startManagingCursor(c);
+
+                String[] from = new String[] { ProduitDB.KEY_NAME };
+                int[] to = new int[] { R.id.name };
+
+                // Now create an array adapter and set it to display using our row
+                SimpleCursorAdapter notes = new SimpleCursorAdapter(getContext(), R.layout.produit_row, c, from, to);
+                maVariableListView.setAdapter(notes);
+
+                maVariableEditText.setText(""); // 3 - remise à vide de l'EditText
+            }
+        });
+**/
     }
 
-
-/*
-    private View mView;
-    private Button button_submit;
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_produits, container, false);
 
-        mView = inflater.inflate(R.layout.fragment_produits, container,false);
-        button_submit=(Button)mView.findViewById(R.id.button_ajouter_produit);
-
-
-        button_submit.setOnClickListener();
-
-        return mView;
+        return view;
     }
 
-
     @Override
-    public void onClick(View v) {
-        final EditText maVariableEditText = (EditText) getView().findViewById(R.id.editText_ajouter_produit);
-        switch (v.getId()) {
-            case R.id.button_ajouter_produit:
-                maVariableEditText.setText("123456");
-                break;
-            default:
-                maVariableEditText.setText("126");
-                break;
-        }
+    public void onActivityCreated(Bundle savedInstanceState)
+    {
+        // TODO Auto-generated method stub
+        super.onActivityCreated(savedInstanceState);
 
-    }*/
+        final EditText maVariableEditText = (EditText) getActivity().findViewById(R.id.editText_ajouter_produit);
 
+        Button b = (Button) getView().findViewById(R.id.button_ajouter_produit);
+        b.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // Définition du bouton
+                final Button button = (Button) getActivity().findViewById(R.id.button_ajouter_produit);
+                // Définition du onClickListener
+                button.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        ProduitDB produit_predef;
+                        Cursor c;
+                        produit_predef = new ProduitDB(getContext());
+                        produit_predef.open();
+                        final EditText maVariableEditText = (EditText) getActivity().findViewById(R.id.editText_ajouter_produit);
+                        ListView maVariableListView = (ListView) getActivity().findViewById(R.id.listView_ajouter_produit);
+
+                        // Ajout dans la BDD
+                        String txt = maVariableEditText.getText().toString();
+                        produit_predef.addproduit(txt);
+
+                        // Récupération des données dans la BDD
+                        c = produit_predef.fetchAllNotes();
+
+                        // Affichage des données
+                        getActivity().startManagingCursor(c);
+
+                        String[] from = new String[] { ProduitDB.KEY_NAME };
+                        int[] to = new int[] { R.id.name };
+
+                        // Now create an array adapter and set it to display using our row
+                        SimpleCursorAdapter notes = new SimpleCursorAdapter(getContext(), R.layout.produit_row, c, from, to);
+                        maVariableListView.setAdapter(notes);
+
+                        maVariableEditText.setText(""); // 3 - remise à vide de l'EditText
+                    }
+                });
+            }
+        });
+    }
 
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -135,6 +212,7 @@ public class Produits extends Fragment {
         mListener = null;
     }
 
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -149,37 +227,4 @@ public class Produits extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-
-
-    /* Ajout d'un nouveau produit à la base de connaissance */
-    /*
-    public void addButton(View view) {
-
-        final EditText maVariableEditText = (EditText) view.findViewById(R.id.editText_ajouter_produit);
-        /*
-        ListView maVariableListView = (ListView) view.findViewById(R.id.listView_ajouter_produit);
-
-        // Ajout dans la BDD
-        String txt = maVariableEditText.getText().toString();
-        produit_predef.addproduit(txt);
-
-
-        // Récupération des données dans la BDD
-        c = produit_predef.fetchAllNotes();
-
-
-        // Affichage des données
-        getActivity().startManagingCursor(c);
-
-        String[] from = new String[] { ProduitDB.KEY_NAME,  ProduitDB.KEY_ROWID, ProduitDB.KEY_QUANTITY};
-        int[] to = new int[] { R.id.section_label };
-
-        // Now create an array adapter and set it to display using our row
-        SimpleCursorAdapter notes = new SimpleCursorAdapter(getContext(), R.layout.fragment_produits, c, from, to);
-        maVariableListView.setAdapter(notes);
-
-        maVariableEditText.setText("11"); // 3 - remise à vide de l'EditText
-
-    }*/
-
 }

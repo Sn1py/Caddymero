@@ -1,6 +1,7 @@
 package com.example.jordan.mycaddy;
 
 import android.database.Cursor;
+import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -13,21 +14,25 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+import layout.Produits;
 
+import static com.example.jordan.mycaddy.R.id.container;
 
-
+public class MainActivity extends AppCompatActivity implements Produits.OnFragmentInteractionListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -56,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager = (ViewPager) findViewById(container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -70,10 +75,11 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-
-
-
-
+/**
+        final View rootView = inflater.inflate(R.layout.fragment_produits, container, false);
+        ListView maVariableListView = (ListView) findViewById(R.id.listView_ajouter_produit);
+        registerForContextMenu(maVariableListView);
+ **/
     }
 
     @Override
@@ -131,14 +137,20 @@ public class MainActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
 
-            /* Contenu de l'onglet à insérer ici */
+            // Contenu de l'onglet à insérer ici
 
             if(getArguments().getInt(ARG_SECTION_NUMBER) == 1) {
 
                 final View rootView = inflater.inflate(R.layout.fragment_produits, container, false);
-                //addButton(rootView);
 
+/**
+                final View rootView = inflater.inflate(R.layout.fragment_produits, container, false);
+
+                // Gestion du clique sur le bouton d'ajout d'un nouveau produit pré-défini
+
+                // Définition du bouton
                 final Button button = (Button) rootView.findViewById(R.id.button_ajouter_produit);
+                // Définition du onClickListener
                 button.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
                         ProduitDB produit_predef;
@@ -147,7 +159,6 @@ public class MainActivity extends AppCompatActivity {
                         produit_predef.open();
                         final EditText maVariableEditText = (EditText) rootView.findViewById(R.id.editText_ajouter_produit);
 
-                        ListView maVariableListView = (ListView) rootView.findViewById(R.id.listView_ajouter_produit);
 
                         // Ajout dans la BDD
                         String txt = maVariableEditText.getText().toString();
@@ -164,32 +175,56 @@ public class MainActivity extends AppCompatActivity {
 
                         // Now create an array adapter and set it to display using our row
                         SimpleCursorAdapter notes = new SimpleCursorAdapter(getContext(), R.layout.produit_row, c, from, to);
+                        ListView maVariableListView = (ListView) getActivity().findViewById(R.id.listView_ajouter_produit);
                         maVariableListView.setAdapter(notes);
 
                         maVariableEditText.setText(""); // 3 - remise à vide de l'EditText
                     }
                 });
-
+                **/
                 return rootView;
             }
+
+
             else{
                 View rootView = inflater.inflate(R.layout.fragment_main, container, false);
                 TextView textView = (TextView) rootView.findViewById(R.id.section_label);
                 return rootView;
             }
         }
+
+        public interface OnFragmentInteractionListener {
+            // TODO: Update argument type and name
+            void onFragmentInteraction(Uri uri);
+        }
     }
-/*
-    public static void addButton (View view){
-        final EditText maVariableEditText = (EditText) view.findViewById(R.id.editText_ajouter_produit);
-        maVariableEditText.setText("11"); // 3 - remise à vide de l'EditText
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.context_menu_produit, menu);
     }
-*/
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        switch (item.getItemId()) {
+            case R.id.supprimer:
+
+                return true;
+
+           default:
+                return super.onContextItemSelected(item);
+        }
+    }
+
+
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    public class SectionsPagerAdapter extends FragmentPagerAdapter{
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -199,6 +234,14 @@ public class MainActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
+
+            switch (position+1){
+                case 1: return new Produits();
+
+                default:
+                    break;
+            }
+
             return PlaceholderFragment.newInstance(position + 1);
         }
 
@@ -221,4 +264,9 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
     }
+
+    public void onFragmentInteraction(Uri uri){
+
+    }
+
 }
