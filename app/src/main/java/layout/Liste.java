@@ -13,12 +13,12 @@ import com.example.jordan.mycaddy.R;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link liste.OnFragmentInteractionListener} interface
+ * {@link Liste.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link liste#newInstance} factory method to
+ * Use the {@link Liste#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class liste extends Fragment {
+public class Liste extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -30,7 +30,7 @@ public class liste extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public liste() {
+    public Liste() {
         // Required empty public constructor
     }
 
@@ -40,11 +40,11 @@ public class liste extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment liste.
+     * @return A new instance of fragment Liste.
      */
     // TODO: Rename and change types and number of parameters
-    public static liste newInstance(String param1, String param2) {
-        liste fragment = new liste();
+    public static Liste newInstance(String param1, String param2) {
+        Liste fragment = new Liste();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
