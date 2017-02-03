@@ -69,7 +69,7 @@ public class ProduitDB {
      * @param name le nom du produit
      * @return rowId ou -1 si erreur
      */
-    public long addproduit(String name) {
+    public long ajouterProduit(String name) {
         ContentValues initialValues = new ContentValues();
         initialValues.put(KEY_NAME, name);
         initialValues.put(KEY_QUANTITY, 1);
@@ -82,14 +82,14 @@ public class ProduitDB {
      * @param rowId l'id du produit à supprimer
      * @return true si le produit a été effacé
      */
-    public boolean deleteproduit(long rowId) {
+    public boolean supprimerProduit(long rowId) {
         return mDb.delete(DATABASE_TABLE, KEY_ROWID + "=" + rowId, null) > 0;
     }
 
     /**
      * Efface toute la liste de produit
      */
-    public void deleteAllNote() {
+    public void supprimerTousLesProduits() {
         mDb.delete(DATABASE_TABLE,null,null);
     }
 
@@ -100,7 +100,7 @@ public class ProduitDB {
      * @param quantity quantité du produit
      * @return vrai si le produit est mis à jour, faux sinon.
      */
-    public boolean updateproduit(long rowId, String name, int quantity) {
+    public boolean majProduit(long rowId, String name, int quantity) {
         ContentValues args = new ContentValues();
         args.put(KEY_NAME, name);
         args.put(KEY_QUANTITY, quantity);
@@ -109,7 +109,7 @@ public class ProduitDB {
     }
 
 
-    public Cursor fetchAllNotes() {
+    public Cursor recupererLignes() {
         return mDb.query(DATABASE_TABLE, new String[] {KEY_ROWID, KEY_NAME,
                 KEY_QUANTITY}, null, null, null, null, null);
     }

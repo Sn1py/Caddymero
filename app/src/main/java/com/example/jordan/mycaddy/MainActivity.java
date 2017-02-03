@@ -75,11 +75,7 @@ public class MainActivity extends AppCompatActivity implements Produits.OnFragme
                         .setAction("Action", null).show();
             }
         });
-/**
-        final View rootView = inflater.inflate(R.layout.fragment_produits, container, false);
-        ListView maVariableListView = (ListView) findViewById(R.id.listView_ajouter_produit);
-        registerForContextMenu(maVariableListView);
- **/
+
     }
 
     @Override
@@ -142,46 +138,6 @@ public class MainActivity extends AppCompatActivity implements Produits.OnFragme
             if(getArguments().getInt(ARG_SECTION_NUMBER) == 1) {
 
                 final View rootView = inflater.inflate(R.layout.fragment_produits, container, false);
-
-/**
-                final View rootView = inflater.inflate(R.layout.fragment_produits, container, false);
-
-                // Gestion du clique sur le bouton d'ajout d'un nouveau produit pré-défini
-
-                // Définition du bouton
-                final Button button = (Button) rootView.findViewById(R.id.button_ajouter_produit);
-                // Définition du onClickListener
-                button.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        ProduitDB produit_predef;
-                        Cursor c;
-                        produit_predef = new ProduitDB(getContext());
-                        produit_predef.open();
-                        final EditText maVariableEditText = (EditText) rootView.findViewById(R.id.editText_ajouter_produit);
-
-
-                        // Ajout dans la BDD
-                        String txt = maVariableEditText.getText().toString();
-                        produit_predef.addproduit(txt);
-
-                        // Récupération des données dans la BDD
-                        c = produit_predef.fetchAllNotes();
-
-                        // Affichage des données
-                        getActivity().startManagingCursor(c);
-
-                        String[] from = new String[] { ProduitDB.KEY_NAME };
-                        int[] to = new int[] { R.id.name };
-
-                        // Now create an array adapter and set it to display using our row
-                        SimpleCursorAdapter notes = new SimpleCursorAdapter(getContext(), R.layout.produit_row, c, from, to);
-                        ListView maVariableListView = (ListView) getActivity().findViewById(R.id.listView_ajouter_produit);
-                        maVariableListView.setAdapter(notes);
-
-                        maVariableEditText.setText(""); // 3 - remise à vide de l'EditText
-                    }
-                });
-                **/
                 return rootView;
             }
 
@@ -198,27 +154,6 @@ public class MainActivity extends AppCompatActivity implements Produits.OnFragme
             void onFragmentInteraction(Uri uri);
         }
     }
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.context_menu_produit, menu);
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        switch (item.getItemId()) {
-            case R.id.supprimer:
-
-                return true;
-
-           default:
-                return super.onContextItemSelected(item);
-        }
-    }
-
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to

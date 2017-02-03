@@ -8,4 +8,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="supprimer">Supprimer</string>
     <string name="recherche_google">Google</string>
+    <string name="oui">Oui</string>
+    <string name="non">Non</string>
+    <string name="dialog_message">Vouslez-vous vraiment supprimer ?</string>
+    <string name="dialog_title">Confirmer la suppression</string>
 </resources>
