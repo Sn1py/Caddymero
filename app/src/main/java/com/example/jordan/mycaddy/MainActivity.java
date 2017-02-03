@@ -78,33 +78,13 @@ public class MainActivity extends AppCompatActivity implements Produits.OnFragme
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.vider_liste) {
-            return true;
-        }
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.vider_element_barres) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    /**
+     /**
      * A placeholder fragment containing a simple view.
      */
     public static class PlaceholderFragment extends Fragment {
@@ -130,23 +110,9 @@ public class MainActivity extends AppCompatActivity implements Produits.OnFragme
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-
-            // Contenu de l'onglet à insérer ici
-
-            if(getArguments().getInt(ARG_SECTION_NUMBER) == 1) {
-
-                final View rootView = inflater.inflate(R.layout.fragment_produits, container, false);
-                return rootView;
-            }
-
-
-            else{
-                View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-                TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-                return rootView;
-            }
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            return rootView;
         }
 
         public interface OnFragmentInteractionListener {

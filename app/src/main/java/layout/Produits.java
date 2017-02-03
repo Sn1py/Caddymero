@@ -12,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.ContextMenu;
 import android.view.InflateException;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -77,8 +78,6 @@ public class Produits extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //getActivity().setContentView(R.layout.activity_main);
-
         produit_predef = new ProduitDB(getContext());
         produit_predef.open();
 
@@ -87,7 +86,7 @@ public class Produits extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -136,6 +135,29 @@ public class Produits extends Fragment {
         registerForContextMenu(maVariableListView);
 
         actualiser();
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        MenuItem item = menu.findItem(R.id.vider_element_barres);
+        MenuItem item2 = menu.findItem(R.id.vider_liste);
+        item.setVisible(false);
+        item2.setVisible(false);
+    }
+
+    // Gestion de l'action des boutons du menu
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.vider_liste:
+                return true;
+
+            case R.id.vider_element_barres:
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 
