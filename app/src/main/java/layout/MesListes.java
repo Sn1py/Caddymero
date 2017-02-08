@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -59,6 +61,8 @@ public class MesListes extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -67,6 +71,31 @@ public class MesListes extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_mes_listes, container, false);
     }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        MenuItem vider_element_barres = menu.findItem(R.id.vider_element_barres);
+        MenuItem vider_liste = menu.findItem(R.id.vider_liste);
+        vider_element_barres.setVisible(false);
+        vider_liste.setVisible(false);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.vider_element_barres:
+
+                return false;
+            case R.id.vider_liste:
+                // Not implemented here
+                return false;
+            default:
+                break;
+        }
+
+        return false;
+    }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

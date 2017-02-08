@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -131,33 +132,45 @@ public class Produits extends Fragment {
         });
 
         // Contexte menu
-        ListView maVariableListView = (ListView) getActivity().findViewById(R.id.listView_ajouter_produit);
+        final ListView maVariableListView = (ListView) getActivity().findViewById(R.id.listView_ajouter_produit);
         registerForContextMenu(maVariableListView);
+
+        maVariableListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Récupérer le texte
+                TextView tv=(TextView) view;
+                //tv.setPaintFlags(tv.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
+            }
+        });
 
         actualiser();
     }
 
+
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        MenuItem item = menu.findItem(R.id.vider_element_barres);
-        MenuItem item2 = menu.findItem(R.id.vider_liste);
-        item.setVisible(false);
-        item2.setVisible(false);
+        MenuItem vider_element_barres = menu.findItem(R.id.vider_element_barres);
+        MenuItem vider_liste = menu.findItem(R.id.vider_liste);
+        vider_element_barres.setVisible(false);
+        vider_liste.setVisible(false);
     }
 
-    // Gestion de l'action des boutons du menu
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
         switch (item.getItemId()) {
-            case R.id.vider_liste:
-                return true;
-
             case R.id.vider_element_barres:
-                return true;
 
+                return false;
+            case R.id.vider_liste:
+                // Not implemented here
+                return false;
             default:
-                return super.onOptionsItemSelected(item);
+                break;
         }
+
+        return false;
     }
 
 
