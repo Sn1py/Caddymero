@@ -226,7 +226,7 @@ public class Produits extends Fragment {
         getActivity().startManagingCursor(c);
 
         String[] from = new String[] { DB.KEY_NOM };
-        int[] to = new int[] { R.id.name };
+        int[] to = new int[] { R.id.nom };
 
         // Now create an array adapter and set it to display using our row
         SimpleCursorAdapter notes = new SimpleCursorAdapter(getContext(), R.layout.produit_row, c, from, to);

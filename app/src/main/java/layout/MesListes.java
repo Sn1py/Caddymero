@@ -1,15 +1,21 @@
 package layout;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
 
+import com.example.jordan.mycaddy.DB;
 import com.example.jordan.mycaddy.R;
 
 /**
@@ -21,6 +27,9 @@ import com.example.jordan.mycaddy.R;
  * create an instance of this fragment.
  */
 public class MesListes extends Fragment {
+    private Cursor c;
+    private DB base;
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -70,6 +79,39 @@ public class MesListes extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_mes_listes, container, false);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+
+        final EditText maVariableEditText = (EditText) getActivity().findViewById(R.id.editText_ajouter_liste);
+
+        Button b = (Button) getView().findViewById(R.id.button_ajouter_liste);
+        b.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // Définition du bouton
+                final Button button = (Button) getActivity().findViewById(R.id.button_ajouter_liste);
+                // Définition du onClickListener
+                button.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        DB base;
+                        Cursor c;
+                        base = new DB(getContext());
+                        base.open();
+
+                        // Ajout dans la BDD
+                        String txt = maVariableEditText.getText().toString();
+                       // base.ajouterListe(txt);
+
+                        actualiser();
+                    }
+                });
+            }
+        });
+
     }
 
     @Override
@@ -134,5 +176,25 @@ public class MesListes extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public void actualiser(){
+        final EditText maVariableEditText = (EditText) getActivity().findViewById(R.id.editText_ajouter_liste);
+        ListView maVariableListView = (ListView) getActivity().findViewById(R.id.listView_ajouter_liste);
+
+        // Récupération des données dans la BDD
+       // c = base.recupererListes();
+
+        // Affichage des données
+        getActivity().startManagingCursor(c);
+
+        String[] from = new String[] { DB.KEY_NOM };
+        int[] to = new int[] { R.id.nom };
+
+        // Now create an array adapter and set it to display using our row
+        SimpleCursorAdapter notes = new SimpleCursorAdapter(getContext(), R.layout.meslistes_row, c, from, to);
+        maVariableListView.setAdapter(notes);
+
+        maVariableEditText.setText(""); // 3 - remise à vide de l'EditText
     }
 }
