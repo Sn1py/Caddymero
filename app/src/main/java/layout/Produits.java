@@ -23,7 +23,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.jordan.mycaddy.ProduitDB;
+import com.example.jordan.mycaddy.DB;
 import com.example.jordan.mycaddy.R;
 
 import static com.example.jordan.mycaddy.R.id.container;
@@ -38,7 +38,7 @@ import static com.example.jordan.mycaddy.R.id.container;
  */
 public class Produits extends Fragment {
 
-    private ProduitDB produit_predef;
+    private DB base;
     private Cursor c;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -78,8 +78,8 @@ public class Produits extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        produit_predef = new ProduitDB(getContext());
-        produit_predef.open();
+        base = new DB(getContext());
+        base.open();
 
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
@@ -110,23 +110,23 @@ public class Produits extends Fragment {
 
             @Override
             public void onClick(View v) {
-            // Définition du bouton
-            final Button button = (Button) getActivity().findViewById(R.id.button_ajouter_produit);
-            // Définition du onClickListener
-            button.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    ProduitDB produit_predef;
-                    Cursor c;
-                    produit_predef = new ProduitDB(getContext());
-                    produit_predef.open();
+                // Définition du bouton
+                final Button button = (Button) getActivity().findViewById(R.id.button_ajouter_produit);
+                // Définition du onClickListener
+                button.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        DB base;
+                        Cursor c;
+                        base = new DB(getContext());
+                        base.open();
 
-                    // Ajout dans la BDD
-                    String txt = maVariableEditText.getText().toString();
-                    produit_predef.ajouterProduit(txt);
+                        // Ajout dans la BDD
+                        String txt = maVariableEditText.getText().toString();
+                        //base.ajouterProduit(txt);
 
-                    actualiser();
-                }
-            });
+                        actualiser();
+                    }
+                });
             }
         });
 
@@ -134,7 +134,7 @@ public class Produits extends Fragment {
         ListView maVariableListView = (ListView) getActivity().findViewById(R.id.listView_ajouter_produit);
         registerForContextMenu(maVariableListView);
 
-        actualiser();
+        //actualiser();
     }
 
     @Override
@@ -183,8 +183,8 @@ public class Produits extends Fragment {
                 // Add the buttons
                 builder.setPositiveButton(R.string.oui, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        produit_predef.supprimerProduit(info.id);
-                        actualiser();
+                        base.supprimerProduit(info.id);
+                        //actualiser();
                     }
                 });
 
@@ -210,12 +210,12 @@ public class Produits extends Fragment {
         ListView maVariableListView = (ListView) getActivity().findViewById(R.id.listView_ajouter_produit);
 
         // Récupération des données dans la BDD
-        c = produit_predef.recupererLignes();
+        c = base.recupererProduits();
 
         // Affichage des données
         getActivity().startManagingCursor(c);
 
-        String[] from = new String[] { ProduitDB.KEY_NAME };
+        String[] from = new String[] { DB.KEY_NOM };
         int[] to = new int[] { R.id.name };
 
         // Now create an array adapter and set it to display using our row
