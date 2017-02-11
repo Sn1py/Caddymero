@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AlertDialog;
@@ -18,13 +19,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.jordan.mycaddy.DB;
 import com.example.jordan.mycaddy.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.example.jordan.mycaddy.R.id.container;
 
@@ -103,30 +110,82 @@ public class Produits extends Fragment {
         // TODO Auto-generated method stub
         super.onActivityCreated(savedInstanceState);
 
-        final EditText maVariableEditText = (EditText) getActivity().findViewById(R.id.editText_ajouter_produit);
-
-        Button b = (Button) getView().findViewById(R.id.button_ajouter_produit);
-        b.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton ajouter_produit = (FloatingActionButton) getView().findViewById(R.id.ajouter_produit);
+        ajouter_produit.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-            // Définition du bouton
-            final Button button = (Button) getActivity().findViewById(R.id.button_ajouter_produit);
-            // Définition du onClickListener
-            button.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    DB base;
-                    Cursor c;
-                    base = new DB(getContext());
-                    base.open();
+                // Définition du bouton
+                final FloatingActionButton ajouter_produit_action = (FloatingActionButton) getActivity().findViewById(R.id.ajouter_produit);
+                // Définition du onClickListener
 
-                    // Ajout dans la BDD
-                    String txt = maVariableEditText.getText().toString();
-                    //base.ajouterProduit(txt);
+                ajouter_produit_action.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
 
-                    actualiser();
-                }
-            });
+                        LayoutInflater li = LayoutInflater.from(getContext());
+
+                        final View promptsView = li.inflate(R.layout.dialog, null);
+
+                        final EditText editText_NomProduit = (EditText) promptsView.findViewById(R.id.editText);
+
+                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+
+                        alertDialogBuilder.setView(promptsView);
+
+                        // set dialog message
+
+                        alertDialogBuilder.setTitle("Ajouter un produit");
+                        // create alert dialog
+                        final AlertDialog alertDialog = alertDialogBuilder.create();
+
+                        final Spinner mSpinner= (Spinner) promptsView.findViewById(R.id.spinner);
+                        List<String> list = new ArrayList<String>();
+                        list.add("list 1");
+                        list.add("list 2");
+                        list.add("list 3");
+                        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, list);
+                        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        mSpinner.setAdapter(dataAdapter);
+                        final Button mButton = (Button) promptsView.findViewById(R.id.button);
+
+                        // reference UI elements from my_dialog_layout in similar fashion
+
+                        //mSpinner.setOnItemSelectedListener(new OnSpinnerItemClicked());
+
+                        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+
+                            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+
+                                String categorie = parent.getItemAtPosition(pos).toString();
+
+                                Toast.makeText(parent.getContext(), "Clicked : " +
+                                        parent.getItemAtPosition(pos).toString(), Toast.LENGTH_LONG).show();
+
+                            }
+
+                            public void onNothingSelected(AdapterView<?> arg0) {
+                                // TODO Auto-generated method stub
+
+                            }
+                        });
+
+                        mButton.setOnClickListener(new View.OnClickListener() {
+                            public void onClick(View v) {
+                                String nom_produit = editText_NomProduit.getText().toString();
+                                //base.ajouterProduit(nom_produit);
+                                //actualiser();
+                                Toast.makeText(getContext(), "Texte : " +
+                                        nom_produit, Toast.LENGTH_LONG).show();
+                                alertDialog.dismiss();
+
+                            }
+                        });
+
+                        alertDialog.show();
+                        alertDialog.setCanceledOnTouchOutside(false);
+                    }
+                });
             }
         });
 
@@ -216,7 +275,6 @@ public class Produits extends Fragment {
     }
 
     public void actualiser(){
-        final EditText maVariableEditText = (EditText) getActivity().findViewById(R.id.editText_ajouter_produit);
         ListView maVariableListView = (ListView) getActivity().findViewById(R.id.listView_ajouter_produit);
 
         // Récupération des données dans la BDD
@@ -232,7 +290,6 @@ public class Produits extends Fragment {
         SimpleCursorAdapter notes = new SimpleCursorAdapter(getContext(), R.layout.produit_row, c, from, to);
         maVariableListView.setAdapter(notes);
 
-        maVariableEditText.setText(""); // 3 - remise à vide de l'EditText
     }
 
 
