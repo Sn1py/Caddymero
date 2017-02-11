@@ -291,6 +291,7 @@ public class Produits extends Fragment {
         maVariableListView.setAdapter(notes);
 
     }
+    //
 
 
     // TODO: Rename method, update argument and hook method into UI event
