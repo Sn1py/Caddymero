@@ -26,20 +26,20 @@ public class DB {
 
     ///Variables utilisées pour la création de la base
     private static final String DATABASE_CREATE_LISTES =
-            "create table produits (_id integer primary key autoincrement, "
-                    + "nom text not null";
+            "create table listes (_id integer primary key autoincrement, "
+                    + "nom text not null)";
     private static final String DATABASE_CREATE_CATEGORIES =
-            "create table produits (_id integer primary key autoincrement, "
+            "create table categories (_id integer primary key autoincrement, "
                     + "nom text not null, logo text not null);";
     private static final String DATABASE_CREATE_PRODUITS =
             "create table produits (_id integer primary key autoincrement, "
             + "nom text not null, id_categorie integer not null, logo text not null);";
     private static final String DATABASE_CREATE_ELEMENTS =
-            "create table produits (_id integer primary key autoincrement, "
+            "create table elements (_id integer primary key autoincrement, "
                     + "id_produit integer not null, quantite integer not null, coche integer not null);";
     private static final String DATABASE_CREATE_PARAMETRES =
-            "create table produits (_id integer primary key autoincrement, "
-                    + "id_liste_actuelle integer";
+            "create table parametres (_id integer primary key autoincrement, "
+                    + "id_liste_actuelle integer)";
 
 
     private static final String DATABASE_NAME = "data";
