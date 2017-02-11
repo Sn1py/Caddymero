@@ -173,8 +173,8 @@ public class Produits extends Fragment {
                         mButton.setOnClickListener(new View.OnClickListener() {
                             public void onClick(View v) {
                                 String nom_produit = editText_NomProduit.getText().toString();
-                                //base.ajouterProduit(nom_produit);
-                                //actualiser();
+                                base.ajouterProduit(nom_produit, 1, "test");
+                                actualiser();
                                 Toast.makeText(getContext(), "Texte : " +
                                         nom_produit, Toast.LENGTH_LONG).show();
                                 alertDialog.dismiss();
@@ -203,7 +203,7 @@ public class Produits extends Fragment {
             }
         });
 
-        //actualiser();
+        actualiser();
     }
 
     @Override
@@ -278,7 +278,7 @@ public class Produits extends Fragment {
         ListView maVariableListView = (ListView) getActivity().findViewById(R.id.listView_ajouter_produit);
 
         // Récupération des données dans la BDD
-        //c = base.recupererLignes();
+        c = base.recupererProduits();
 
         // Affichage des données
         getActivity().startManagingCursor(c);
