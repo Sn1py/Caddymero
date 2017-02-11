@@ -203,7 +203,7 @@ public class Produits extends Fragment {
             }
         });
 
-        actualiser();
+        //actualiser();
     }
 
     @Override
@@ -291,8 +291,6 @@ public class Produits extends Fragment {
         maVariableListView.setAdapter(notes);
 
     }
-
-
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

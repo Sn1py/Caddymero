@@ -27,7 +27,7 @@ public class DB {
     ///Variables utilisées pour la création de la base
     private static final String DATABASE_CREATE_LISTES =
             "create table listes (_id integer primary key autoincrement, "
-                    + "nom text not null)";
+                    + "nom text not null);";
     private static final String DATABASE_CREATE_CATEGORIES =
             "create table categories (_id integer primary key autoincrement, "
                     + "nom text not null, logo text not null);";
@@ -39,7 +39,7 @@ public class DB {
                     + "id_produit integer not null, quantite integer not null, coche integer not null);";
     private static final String DATABASE_CREATE_PARAMETRES =
             "create table parametres (_id integer primary key autoincrement, "
-                    + "id_liste_actuelle integer)";
+                    + "id_liste_actuelle integer);";
 
 
     private static final String DATABASE_NAME = "data";
@@ -105,11 +105,11 @@ public class DB {
     }
 
     public Cursor recupererListes() {
-        return mDb.query(DATABASE_TABLE_PRODUITS, new String[] {KEY_ID, KEY_NOM}, null, null, null, null, null);
+        return mDb.query(DATABASE_TABLE_LISTES, new String[] {KEY_ID, KEY_NOM}, null, null, null, null, null);
     }
 
     public Cursor recupererListesId(int id) {
-        return mDb.query(DATABASE_TABLE_PRODUITS, new String[] {KEY_ID, KEY_NOM}, null, new String[] {KEY_ID, String.valueOf(id)}, null, null, null);
+        return mDb.query(DATABASE_TABLE_LISTES, new String[] {KEY_ID, KEY_NOM}, null, new String[] {KEY_ID, String.valueOf(id)}, null, null, null);
     }
 
     /* Gestion Table Categorie */

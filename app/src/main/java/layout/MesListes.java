@@ -72,6 +72,9 @@ public class MesListes extends Fragment {
         }
 
         setHasOptionsMenu(true);
+
+        base = new DB(getContext());
+        base.open();
     }
 
     @Override
@@ -97,15 +100,9 @@ public class MesListes extends Fragment {
                 // Définition du onClickListener
                 button.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
-                        DB base;
-                        Cursor c;
-                        base = new DB(getContext());
-                        base.open();
-
                         // Ajout dans la BDD
                         String txt = maVariableEditText.getText().toString();
-                       // base.ajouterListe(txt);
-
+                        base.ajouterListe(txt);
                         actualiser();
                     }
                 });
@@ -138,6 +135,25 @@ public class MesListes extends Fragment {
         return false;
     }
 
+    public void actualiser(){
+        final EditText maVariableEditText = (EditText) getActivity().findViewById(R.id.editText_ajouter_liste);
+        ListView maVariableListView = (ListView) getActivity().findViewById(R.id.listView_ajouter_liste);
+
+        // Récupération des données dans la BDD
+        c = base.recupererListes();
+
+        // Affichage des données
+        getActivity().startManagingCursor(c);
+
+        String[] from = new String[] { DB.KEY_NOM };
+        int[] to = new int[] { R.id.nom };
+
+        // Now create an array adapter and set it to display using our row
+        SimpleCursorAdapter notes = new SimpleCursorAdapter(getContext(), R.layout.meslistes_row, c, from, to);
+        maVariableListView.setAdapter(notes);
+
+        maVariableEditText.setText(""); // 3 - remise à vide de l'EditText
+    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -176,25 +192,5 @@ public class MesListes extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-    }
-
-    public void actualiser(){
-        final EditText maVariableEditText = (EditText) getActivity().findViewById(R.id.editText_ajouter_liste);
-        ListView maVariableListView = (ListView) getActivity().findViewById(R.id.listView_ajouter_liste);
-
-        // Récupération des données dans la BDD
-       // c = base.recupererListes();
-
-        // Affichage des données
-        getActivity().startManagingCursor(c);
-
-        String[] from = new String[] { DB.KEY_NOM };
-        int[] to = new int[] { R.id.nom };
-
-        // Now create an array adapter and set it to display using our row
-        SimpleCursorAdapter notes = new SimpleCursorAdapter(getContext(), R.layout.meslistes_row, c, from, to);
-        maVariableListView.setAdapter(notes);
-
-        maVariableEditText.setText(""); // 3 - remise à vide de l'EditText
     }
 }
