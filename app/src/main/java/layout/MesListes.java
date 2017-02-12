@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -88,11 +89,14 @@ public class MesListes extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_mes_listes, container, false);
+
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
+
+
 
         final EditText maVariableEditText = (EditText) getActivity().findViewById(R.id.editText_ajouter_liste);
 
@@ -128,14 +132,16 @@ public class MesListes extends Fragment {
                 int[] to = new int[] { R.id.nom };
                 SimpleCursorAdapter notes = new SimpleCursorAdapter(getContext(), R.layout.produit_row, c, from, to);
 
-                Toast.makeText(getContext(), "NB : " + c.getCount(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(getContext(), "Nb liste actuelle : " + c.getCount(), Toast.LENGTH_LONG).show();
 
                 final long id_liste_selectionne =  parent.getItemIdAtPosition(position);
-                Toast.makeText(getContext(), "ID : " + id_liste_selectionne, Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "ID Liste sélectionnée : " + id_liste_selectionne, Toast.LENGTH_LONG).show();
                 // Si aucune liste n'est sélectionnée
                 if(c.getCount() == 0){
                     // on ajoute la liste sélectionnée dans la table paramètre
                     base.ajouterParametre(id_liste_selectionne);
+
+
                 }
                 else{
                     // Sinon, on met à jour l'id de la liste actuelle
@@ -144,7 +150,6 @@ public class MesListes extends Fragment {
 
             }
         });
-
 
         actualiser();
     }

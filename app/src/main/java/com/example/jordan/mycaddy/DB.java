@@ -175,6 +175,11 @@ public class DB {
                 KEY_ID_CATEGORIE,KEY_LOGO}, null, null, null, null, null);
     }
 
+    public Cursor recupererProduitsDeListe(long id_liste) {
+
+        return mDb.rawQuery("SELECT _id, nom FROM produits WHERE _id = (SELECT id_produit FROM elements WHERE id_liste="+id_liste+")", null);
+    }
+
     public Cursor recupererProduitsOrdreAlphabetique() {
         return mDb.rawQuery("SELECT * FROM " + DATABASE_TABLE_PRODUITS + "ORDER BY nom asc", null);
     }

@@ -21,6 +21,8 @@ import android.widget.Toast;
 import com.example.jordan.mycaddy.DB;
 import com.example.jordan.mycaddy.R;
 
+import java.util.List;
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -65,6 +67,8 @@ public class Liste extends Fragment {
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
+        fragment.onDetach();
+        fragment.onAttachFragment(fragment);
         return fragment;
     }
 
@@ -80,6 +84,7 @@ public class Liste extends Fragment {
 
         base = new DB(getContext());
         base.open();
+
     }
 
     @Override
@@ -92,6 +97,7 @@ public class Liste extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
+
 
         // Définition de la ListeView permettant d'afficher les éléments de la liste actuelle
         //ListView listView_afficher_elements = (ListView) getActivity().findViewById(R.id.t);
@@ -108,7 +114,7 @@ public class Liste extends Fragment {
         int[] to = new int[] { R.id.nom };
         SimpleCursorAdapter notes = new SimpleCursorAdapter(getContext(), R.layout.produit_row, c, from, to);
 
-        //Toast.makeText(getContext(), "Valeur : " + c.getCount(), Toast.LENGTH_LONG).show();
+        //Toast.makeText(getContext(), "nombre liste actuelle : " + c.getCount(), Toast.LENGTH_LONG).show();
 
         // Si aucune liste n'est sélectionnée
         if(c.getCount() == 0){
@@ -119,31 +125,40 @@ public class Liste extends Fragment {
             txtView.setVisibility(View.GONE);
 
             // Et on affiche le contenu de la liste
+            /** Récupération de la liste actuelle **/
+
+            ListView listView = (ListView) getActivity().findViewById(R.id.listView_afficher_produit);
+
+            //while(c.moveToNext())
+            //{
+                //if(c.isFirst())
+                //{
+            c.moveToFirst();
+                    //Your code goes here in your case
+                    //Toast.makeText(getContext(), "ID liste : " + c.getString(c.getColumnIndex(DB.KEY_ID_LISTE_ACTUELLE)), Toast.LENGTH_LONG).show();
+                    cursor = base.recupererElementsId(c.getInt(c.getColumnIndex(DB.KEY_ID_LISTE_ACTUELLE)));
+                    //Toast.makeText(getContext(), "NB PRODUITS : " + cursor.getCount(), Toast.LENGTH_LONG).show();
+                    //c.close();
+
+                //}
+            //}
+
+
+            cursor.moveToFirst();
+            //Your code goes here in your case
+            //Toast.makeText(getContext(), "ID liste : " + c.getString(c.getColumnIndex(DB.KEY_ID_LISTE_ACTUELLE)), Toast.LENGTH_LONG).show();
+            Cursor cursor_nom_produit = base.recupererProduitsDeListe(c.getInt(c.getColumnIndex(DB.KEY_ID_LISTE_ACTUELLE)));
+
+
+            getActivity().startManagingCursor(cursor_nom_produit);
+            String[] from_produits = new String[] { DB.KEY_NOM };
+            int[] to_produits = new int[] { R.id.nom };
+            SimpleCursorAdapter produits = new SimpleCursorAdapter(getContext(), R.layout.produit_row, cursor_nom_produit, from_produits, to_produits);
+            listView.setAdapter(produits);
         }
 
 
-        /** Récupération de la liste actuelle **/
 
-        ListView listView = (ListView) getActivity().findViewById(R.id.listView_afficher_produit);
-
-        while(c.moveToNext())
-        {
-            if(c.isFirst())
-            {
-                //Your code goes here in your case
-                Toast.makeText(getContext(), "Valeur : " + c.getString(c.getColumnIndex(DB.KEY_ID_LISTE_ACTUELLE)), Toast.LENGTH_LONG).show();
-                cursor = base.recupererElementsId(c.getInt(c.getColumnIndex(DB.KEY_ID_LISTE_ACTUELLE)));
-                c.close();
-
-            }
-        }
-
-        //Toast.makeText(getContext(), "NB PRODUITS : " + cursor.getCount(), Toast.LENGTH_LONG).show();
-        getActivity().startManagingCursor(cursor);
-        String[] from_produits = new String[] { DB.KEY_ID_PRODUIT };
-        int[] to_produits = new int[] { R.id.nom };
-        SimpleCursorAdapter produits = new SimpleCursorAdapter(getContext(), R.layout.produit_row, cursor, from_produits, to_produits);
-        listView.setAdapter(produits);
 
 
 
@@ -164,6 +179,9 @@ public class Liste extends Fragment {
                  actualiser();
                  }*/
     }
+
+
+
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
@@ -212,6 +230,15 @@ public class Liste extends Fragment {
         // 3. Get the AlertDialog from create()
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Toast.makeText(getContext(), "ON RESUME", Toast.LENGTH_LONG).show();
+        onDestroy();
+        onDetach();
+        onAttach(getContext());
     }
 
     // TODO: Rename method, update argument and hook method into UI event

@@ -206,8 +206,7 @@ public class Produits extends Fragment {
 
                 // ID du produit sélectionné
                final long id_produit_selectionne =  parent.getItemIdAtPosition(position);
-                Toast.makeText(parent.getContext(), "Clicked : " +
-                        parent.getItemIdAtPosition(position), Toast.LENGTH_LONG).show();
+                //Toast.makeText(parent.getContext(), "Clicked : " + parent.getItemIdAtPosition(position), Toast.LENGTH_LONG).show();
 
                 LayoutInflater li = LayoutInflater.from(getContext());
                 // Récupérer la vue liée au xml de la fenêtre de dialogue
@@ -246,8 +245,7 @@ public class Produits extends Fragment {
 
                         base.ajouterElement(id_produit_selectionne, id_liste_selectionnee, 1, 0);
 
-                        Toast.makeText(parent.getContext(), "Clicked : " +
-                                id_liste_selectionnee, Toast.LENGTH_LONG).show();
+                        //Toast.makeText(parent.getContext(), "Clicked : " + id_liste_selectionnee, Toast.LENGTH_LONG).show();
 
                         //Toast.makeText(parent.getContext(), "Clicked : " + parent.getItemIdAtPosition(pos), Toast.LENGTH_LONG).show();
 
