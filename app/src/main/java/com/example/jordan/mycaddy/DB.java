@@ -132,6 +132,10 @@ public class DB {
         return mDb.query(DATABASE_TABLE_CATEGORIES, new String[] {KEY_ID, KEY_NOM, KEY_LOGO}, null, null, null, null, null);
     }
 
+    public Cursor recupererCategoriesOrdreAlphabetique() {
+        return mDb.rawQuery("SELECT * FROM " + DATABASE_TABLE_CATEGORIES + "ORDER BY nom asc", null);
+    }
+
     public Cursor recupererCategorieId(int id) {
         return mDb.query(DATABASE_TABLE_CATEGORIES, new String[] {KEY_ID, KEY_NOM, KEY_LOGO}, null, new String[] {KEY_ID, String.valueOf(id)}, null, null, null);
     }
@@ -171,6 +175,10 @@ public class DB {
                 KEY_ID_CATEGORIE,KEY_LOGO}, null, null, null, null, null);
     }
 
+    public Cursor recupererProduitsOrdreAlphabetique() {
+        return mDb.rawQuery("SELECT * FROM " + DATABASE_TABLE_PRODUITS + "ORDER BY nom asc", null);
+    }
+
     public Cursor recupererProduitsSelonCategorie(int id_categorie){
         return mDb.query(DATABASE_TABLE_CATEGORIES,new String[] {KEY_ID, KEY_NOM,
                 KEY_ID_CATEGORIE, KEY_LOGO},KEY_ID_CATEGORIE+" = "+id_categorie,null,null,null,null);
@@ -201,6 +209,12 @@ public class DB {
     public Cursor recupererElementsId(long id) {
         //return mDb.query(DATABASE_TABLE_ELEMENTS, new String[] {KEY_ID, KEY_LOGO}, null, new String[] {KEY_ID, String.valueOf(id)}, null, null, null);
         return mDb.rawQuery("SELECT _id, id_produit FROM elements WHERE id_liste="+id,null);
+    }
+
+    public boolean setElementCoche(int _id) {
+        ContentValues args = new ContentValues();
+        args.put(KEY_COCHE, 1);
+        return mDb.update(DATABASE_TABLE_PRODUITS, args, KEY_ID + "=" + _id, null) > 0;
     }
 
     /* Gestion Table Parametres */
