@@ -189,7 +189,7 @@ public class DB {
     }
 
     public Cursor recupererProduitsOrdreAlphabetique() {
-        return mDb.rawQuery("SELECT * FROM " + DATABASE_TABLE_PRODUITS + "ORDER BY nom asc", null);
+        return mDb.rawQuery("SELECT * FROM " + DATABASE_TABLE_PRODUITS + " ORDER BY nom", null);
     }
 
     public Cursor recupererProduitsSelonCategorie(int id_categorie){
@@ -222,6 +222,10 @@ public class DB {
     public Cursor recupererElementsId(long id) {
         //return mDb.query(DATABASE_TABLE_ELEMENTS, new String[] {KEY_ID, KEY_LOGO}, null, new String[] {KEY_ID, String.valueOf(id)}, null, null, null);
         return mDb.rawQuery("SELECT _id, id_produit FROM elements WHERE id_liste="+id,null);
+    }
+
+    public Cursor recupererNomsProduitsParElementsId(long id) {
+        return mDb.rawQuery("SELECT a.nom FROM produits a INNER JOIN elements b ON a._id=b.id_produit WHERE b._id = ?", new String[]{String.valueOf(id)});
     }
 
     public boolean setElementCoche(int _id) {
