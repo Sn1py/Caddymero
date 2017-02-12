@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -110,34 +111,42 @@ public class Produits extends Fragment {
         // TODO Auto-generated method stub
         super.onActivityCreated(savedInstanceState);
 
-        FloatingActionButton ajouter_produit = (FloatingActionButton) getView().findViewById(R.id.ajouter_produit);
+        /** Spécification du ContextMenu **/
+        ListView maVariableListView = (ListView) getActivity().findViewById(R.id.listView_ajouter_produit);
+        registerForContextMenu(maVariableListView);
+
+        /** Ajoute d'un nouveau produit **/
+        // Bouton d'ajout d'un produit
+        final FloatingActionButton ajouter_produit = (FloatingActionButton) getView().findViewById(R.id.ajouter_produit);
+        // Si click sur le bouton
         ajouter_produit.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                // Définition du bouton
-                final FloatingActionButton ajouter_produit_action = (FloatingActionButton) getActivity().findViewById(R.id.ajouter_produit);
                 // Définition du onClickListener
-
-                ajouter_produit_action.setOnClickListener(new View.OnClickListener() {
+                ajouter_produit.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
 
                         LayoutInflater li = LayoutInflater.from(getContext());
-
+                        // Récupérer la vue liée au xml de la fenêtre de dialogue
                         final View promptsView = li.inflate(R.layout.dialog, null);
 
+                        // Définit l'EditText
                         final EditText editText_NomProduit = (EditText) promptsView.findViewById(R.id.editText);
 
+                        // Instancier la boite de dialogue
                         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
 
+                        // Associer la vue du XML à la boite de dialogue
                         alertDialogBuilder.setView(promptsView);
 
-                        // set dialog message
-
+                        // Titre de la boite de dialogue
                         alertDialogBuilder.setTitle("Ajouter un produit");
-                        // create alert dialog
+
+                        // Création de la boite de dialogue
                         final AlertDialog alertDialog = alertDialogBuilder.create();
 
+                        // Création du Spinner
                         final Spinner mSpinner= (Spinner) promptsView.findViewById(R.id.spinner);
                         List<String> list = new ArrayList<String>();
                         list.add("list 1");
@@ -146,17 +155,16 @@ public class Produits extends Fragment {
                         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, list);
                         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         mSpinner.setAdapter(dataAdapter);
+
+                        // Définition du bouton d'ajout
                         final Button mButton = (Button) promptsView.findViewById(R.id.button);
 
-                        // reference UI elements from my_dialog_layout in similar fashion
-
-                        //mSpinner.setOnItemSelectedListener(new OnSpinnerItemClicked());
-
+                        // OnItemSelectedListener
                         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
 
                             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
 
+                                // Récupérer la catégorie du nouveau produit
                                 String categorie = parent.getItemAtPosition(pos).toString();
 
                                 Toast.makeText(parent.getContext(), "Clicked : " +
@@ -170,18 +178,16 @@ public class Produits extends Fragment {
                             }
                         });
 
+                        // Valider l'ajout du produit
                         mButton.setOnClickListener(new View.OnClickListener() {
                             public void onClick(View v) {
                                 String nom_produit = editText_NomProduit.getText().toString();
                                 base.ajouterProduit(nom_produit, 1, "test");
                                 actualiser();
-                                Toast.makeText(getContext(), "Texte : " +
-                                        nom_produit, Toast.LENGTH_LONG).show();
+                                Toast.makeText(getContext(), "Texte : " + nom_produit, Toast.LENGTH_LONG).show();
                                 alertDialog.dismiss();
-
                             }
                         });
-
                         alertDialog.show();
                         alertDialog.setCanceledOnTouchOutside(false);
                     }
@@ -189,21 +195,21 @@ public class Produits extends Fragment {
             }
         });
 
-        // Contexte menu
-        ListView maVariableListView = (ListView) getActivity().findViewById(R.id.listView_ajouter_produit);
-        registerForContextMenu(maVariableListView);
 
+        /** Récupération des ID des listes **/
+
+
+
+        /** Intéraction au simple clic sur un item de la ListView **/
         maVariableListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Récupérer le texte
-                TextView tv=(TextView) view;
-                //tv.setPaintFlags(tv.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
 
             }
         });
 
-        //actualiser();
+        actualiser();
     }
 
     @Override
@@ -219,10 +225,10 @@ public class Produits extends Fragment {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.vider_liste:
-                return true;
+                return false;
 
             case R.id.vider_element_barres:
-                return true;
+                return false;
 
             default:
                 return super.onOptionsItemSelected(item);

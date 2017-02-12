@@ -15,6 +15,7 @@ public class DB {
     public static final String KEY_ID_CATEGORIE = "id_categorie";
     public static final String KEY_ID_PRODUIT = "id_produit";
     public static final String KEY_ID_LISTE_ACTUELLE = "id_liste_actuelle";
+    public static final String KEY_ID_LISTE = "id_liste";
     public static final String KEY_NOM = "nom";
     public static final String KEY_QUANTITE = "quantite";
     public static final String KEY_LOGO = "logo";
@@ -36,11 +37,10 @@ public class DB {
             + "nom text not null, id_categorie integer not null, logo text not null);";
     private static final String DATABASE_CREATE_ELEMENTS =
             "create table elements (_id integer primary key autoincrement, "
-                    + "id_produit integer not null, quantite integer not null, coche integer not null);";
+                    + "id_produit integer not null, id_liste integer not null,quantite integer not null, coche integer not null);";
     private static final String DATABASE_CREATE_PARAMETRES =
             "create table parametres (_id integer primary key autoincrement, "
                     + "id_liste_actuelle integer);";
-
 
     private static final String DATABASE_NAME = "data";
     private static final String DATABASE_TABLE_PRODUITS = "produits";
@@ -213,6 +213,11 @@ public class DB {
         ContentValues args = new ContentValues();
         args.put(KEY_ID_LISTE_ACTUELLE, idListeActuelle);
         return mDb.update(DATABASE_TABLE_PRODUITS, args, KEY_ID + "=" + id, null) > 0;
+    }
+
+    // Récupérer les éléments de la table Paramètres
+    public Cursor recupererParametres() {
+        return mDb.query(DATABASE_TABLE_PARAMETRES, new String[] {KEY_ID, KEY_ID_LISTE_ACTUELLE}, null, null, null, null, null);
     }
 
 }

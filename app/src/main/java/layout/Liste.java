@@ -2,16 +2,23 @@ package layout;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.jordan.mycaddy.DB;
 import com.example.jordan.mycaddy.R;
 
 /**
@@ -23,6 +30,10 @@ import com.example.jordan.mycaddy.R;
  * create an instance of this fragment.
  */
 public class Liste extends Fragment {
+
+    private Cursor c;
+    private DB base;
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -65,6 +76,9 @@ public class Liste extends Fragment {
         }
 
         setHasOptionsMenu(true);
+
+        base = new DB(getContext());
+        base.open();
     }
 
     @Override
@@ -72,6 +86,57 @@ public class Liste extends Fragment {
         View view = inflater.inflate(R.layout.fragment_liste, container, false);
 
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+
+        // Définition de la ListeView permettant d'afficher les éléments de la liste actuelle
+        //ListView listView_afficher_elements = (ListView) getActivity().findViewById(R.id.t);
+
+        /** Spécification du ContextMenu **/
+        //registerForContextMenu(listView_afficher_elements);
+
+        TextView txtView = (TextView) getActivity().findViewById(R.id.textView);
+
+        /** Récupération de la liste actuelle **/
+        c = base.recupererParametres();
+        getActivity().startManagingCursor(c);
+        String[] from = new String[] { DB.KEY_ID_LISTE_ACTUELLE };
+        int[] to = new int[] { R.id.nom };
+        SimpleCursorAdapter notes = new SimpleCursorAdapter(getContext(), R.layout.produit_row, c, from, to);
+
+        //Toast.makeText(getContext(), "Valeur : " + c.getCount(), Toast.LENGTH_LONG).show();
+
+        // Si aucune list n'est sélectionnée
+        if(c.getCount() == 0){
+            // Alors on ne masque pas le message d'information
+        }
+        else{
+            // Sinon, on masque le message d'information
+            txtView.setVisibility(View.GONE);
+
+            // Et on affiche le contenu de la liste
+
+        }
+
+
+
+
+        /*
+        listView_afficher_elements.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                 // Récupérer le texte
+                 TextView tv=(TextView) view;
+                 //tv.setPaintFlags(tv.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                 }
+                 });
+
+                 actualiser();
+                 }*/
     }
 
     @Override

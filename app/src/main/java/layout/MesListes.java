@@ -108,7 +108,7 @@ public class MesListes extends Fragment {
                 });
             }
         });
-
+        actualiser();
     }
 
     @Override
