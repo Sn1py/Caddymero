@@ -1,5 +1,6 @@
 package layout;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -149,9 +150,9 @@ public class Produits extends Fragment {
                         // Création du Spinner
                         final Spinner mSpinner= (Spinner) promptsView.findViewById(R.id.spinner);
                         List<String> list = new ArrayList<String>();
-                        list.add("list 1");
-                        list.add("list 2");
-                        list.add("list 3");
+                        list.add("Catégorie 1");
+                        list.add("Catégorie 2");
+                        list.add("Catégorie 3");
                         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, list);
                         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         mSpinner.setAdapter(dataAdapter);
@@ -189,21 +190,84 @@ public class Produits extends Fragment {
                             }
                         });
                         alertDialog.show();
-                        alertDialog.setCanceledOnTouchOutside(false);
+                        alertDialog.setCanceledOnTouchOutside(true);
                     }
                 });
+
+                actualiser();
             }
         });
-
-
-        /** Récupération des ID des listes **/
-
 
 
         /** Intéraction au simple clic sur un item de la ListView **/
         maVariableListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                // ID du produit sélectionné
+               final long id_produit_selectionne =  parent.getItemIdAtPosition(position);
+                Toast.makeText(parent.getContext(), "Clicked : " +
+                        parent.getItemIdAtPosition(position), Toast.LENGTH_LONG).show();
+
+                LayoutInflater li = LayoutInflater.from(getContext());
+                // Récupérer la vue liée au xml de la fenêtre de dialogue
+                final View promptsView = li.inflate(R.layout.dialog, null);
+
+                // Instance dialog
+                final Dialog dialog = new Dialog(getContext());
+
+                // Définition du titre
+                dialog.setTitle("Sélectionnez une liste");
+
+                dialog.setCancelable(true);
+
+                // Récupération du XML de la boite de dialogue
+                dialog.setContentView(R.layout.dialog);
+
+                // Récupération des informations des listes
+                base.open();
+                Cursor select = base.recupererListes();
+
+                // Création du spinner
+                final Spinner spinner = (Spinner) dialog.findViewById(R.id.spinner);
+                SimpleCursorAdapter myAdapt = new SimpleCursorAdapter(dialog.getContext(), android.R.layout.two_line_list_item, select, new String[] {DB.KEY_NOM, DB.KEY_ID,}, new int[] {android.R.id.text1});
+                spinner.setAdapter(myAdapt);
+
+                // Définition du bouton d'ajout
+                final Button mButton = (Button) promptsView.findViewById(R.id.button);
+
+                // OnItemSelectedListener
+                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+                    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+
+                        // Récupérer la catégorie du nouveau produit
+                        long id_liste_selectionnee = parent.getItemIdAtPosition(pos);
+
+                        base.ajouterElement(id_produit_selectionne, id_liste_selectionnee, 1, 0);
+
+                        Toast.makeText(parent.getContext(), "Clicked : " +
+                                id_liste_selectionnee, Toast.LENGTH_LONG).show();
+
+                        //Toast.makeText(parent.getContext(), "Clicked : " + parent.getItemIdAtPosition(pos), Toast.LENGTH_LONG).show();
+
+                    }
+
+                    public void onNothingSelected(AdapterView<?> arg0) {
+                        // TODO Auto-generated method stub
+
+                    }
+                });
+
+                // Valider l'ajout du produit
+                mButton.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
+                // Affichage de la boite de dialogue
+                dialog.show();
 
 
             }

@@ -37,7 +37,7 @@ public class DB {
             + "nom text not null, id_categorie integer not null, logo text not null);";
     private static final String DATABASE_CREATE_ELEMENTS =
             "create table elements (_id integer primary key autoincrement, "
-                    + "id_produit integer not null, id_liste integer not null,quantite integer not null, coche integer not null);";
+                    + "id_produit integer not null, id_liste integer not null, quantite integer not null, coche integer not null);";
     private static final String DATABASE_CREATE_PARAMETRES =
             "create table parametres (_id integer primary key autoincrement, "
                     + "id_liste_actuelle integer);";
@@ -178,12 +178,13 @@ public class DB {
 
     /* Gestion Table Elements */
 
-    public long ajouterElement(int id, int quantite, int coche) {
+    public long ajouterElement(long id_produit, long id_liste, int quantite, int coche) {
 
         // A corriger avec les nouveaux champs
 
         ContentValues initialValues = new ContentValues();
-        initialValues.put(KEY_ID_PRODUIT, id);
+        initialValues.put(KEY_ID_PRODUIT, id_produit);
+        initialValues.put(KEY_ID_LISTE, id_liste);
         initialValues.put(KEY_QUANTITE, quantite);
         initialValues.put(KEY_COCHE, coche);
         return mDb.insert(DATABASE_TABLE_ELEMENTS, null, initialValues);
@@ -197,22 +198,23 @@ public class DB {
         mDb.delete(DATABASE_TABLE_ELEMENTS,null,null);
     }
 
-    public Cursor recupererElementsId(int id) {
-        return mDb.query(DATABASE_TABLE_ELEMENTS, new String[] {KEY_ID, KEY_NOM, KEY_LOGO}, null, new String[] {KEY_ID, String.valueOf(id)}, null, null, null);
+    public Cursor recupererElementsId(long id) {
+        //return mDb.query(DATABASE_TABLE_ELEMENTS, new String[] {KEY_ID, KEY_LOGO}, null, new String[] {KEY_ID, String.valueOf(id)}, null, null, null);
+        return mDb.rawQuery("SELECT id_produit FROM elements WHERE id_liste="+id,null);
     }
 
     /* Gestion Table Parametres */
 
-    public long ajouterParametre(int idListeActuelle) {
+    public long ajouterParametre(long idListeActuelle) {
         ContentValues initialValues = new ContentValues();
         initialValues.put(KEY_ID_LISTE_ACTUELLE, idListeActuelle);
         return mDb.insert(DATABASE_TABLE_PARAMETRES, null, initialValues);
     }
 
-    public boolean majParametreIdListeActuelle(int id, int idListeActuelle) {
+    public boolean majParametreIdListeActuelle(int id, long idListeActuelle) {
         ContentValues args = new ContentValues();
         args.put(KEY_ID_LISTE_ACTUELLE, idListeActuelle);
-        return mDb.update(DATABASE_TABLE_PRODUITS, args, KEY_ID + "=" + id, null) > 0;
+        return mDb.update(DATABASE_TABLE_PARAMETRES, args, KEY_ID + "=" + id, null) > 0;
     }
 
     // Récupérer les éléments de la table Paramètres

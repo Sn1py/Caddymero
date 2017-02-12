@@ -32,6 +32,7 @@ import com.example.jordan.mycaddy.R;
 public class Liste extends Fragment {
 
     private Cursor c;
+    private Cursor cursor;
     private DB base;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -109,7 +110,7 @@ public class Liste extends Fragment {
 
         //Toast.makeText(getContext(), "Valeur : " + c.getCount(), Toast.LENGTH_LONG).show();
 
-        // Si aucune list n'est sélectionnée
+        // Si aucune liste n'est sélectionnée
         if(c.getCount() == 0){
             // Alors on ne masque pas le message d'information
         }
@@ -118,8 +119,33 @@ public class Liste extends Fragment {
             txtView.setVisibility(View.GONE);
 
             // Et on affiche le contenu de la liste
-
         }
+
+
+        /** Récupération de la liste actuelle **/
+
+        ListView listView = (ListView) getActivity().findViewById(R.id.listView_afficher_produit);
+
+        while(c.moveToNext())
+        {
+            if(c.isFirst())
+            {
+                //Your code goes here in your case
+                Toast.makeText(getContext(), "Valeur : " + c.getString(c.getColumnIndex(DB.KEY_ID_LISTE_ACTUELLE)), Toast.LENGTH_LONG).show();
+                cursor = base.recupererElementsId(c.getInt(c.getColumnIndex(DB.KEY_ID_LISTE_ACTUELLE)));
+                c.close();
+
+            }
+        }
+
+        //Toast.makeText(getContext(), "NB PRODUITS : " + cursor.getCount(), Toast.LENGTH_LONG).show();
+        getActivity().startManagingCursor(cursor);
+        String[] from_produits = new String[] { DB.KEY_ID_PRODUIT };
+        int[] to_produits = new int[] { R.id.nom };
+        SimpleCursorAdapter produits = new SimpleCursorAdapter(getContext(), R.layout.produit_row, cursor, from_produits, to_produits);
+        listView.setAdapter(produits);
+
+
 
 
 

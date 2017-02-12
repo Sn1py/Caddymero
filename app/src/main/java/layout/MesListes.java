@@ -1,5 +1,7 @@
 package layout;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -11,9 +13,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.jordan.mycaddy.DB;
 import com.example.jordan.mycaddy.R;
@@ -101,6 +107,7 @@ public class MesListes extends Fragment {
                 button.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
                         // Ajout dans la BDD
+                        hideKeyboardFrom(getContext(),getView());
                         String txt = maVariableEditText.getText().toString();
                         base.ajouterListe(txt);
                         actualiser();
@@ -108,6 +115,37 @@ public class MesListes extends Fragment {
                 });
             }
         });
+
+        /** Intéraction au simple clic sur un item de la ListView **/
+        ListView listView_listes = (ListView) getActivity().findViewById(R.id.listView_afficher_listes);
+        listView_listes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                /** Récupération de la liste actuelle **/
+                c = base.recupererParametres();
+                getActivity().startManagingCursor(c);
+                String[] from = new String[] { DB.KEY_ID_LISTE_ACTUELLE };
+                int[] to = new int[] { R.id.nom };
+                SimpleCursorAdapter notes = new SimpleCursorAdapter(getContext(), R.layout.produit_row, c, from, to);
+
+                Toast.makeText(getContext(), "NB : " + c.getCount(), Toast.LENGTH_LONG).show();
+
+                final long id_liste_selectionne =  parent.getItemIdAtPosition(position);
+                Toast.makeText(getContext(), "ID : " + id_liste_selectionne, Toast.LENGTH_LONG).show();
+                // Si aucune liste n'est sélectionnée
+                if(c.getCount() == 0){
+                    // on ajoute la liste sélectionnée dans la table paramètre
+                    base.ajouterParametre(id_liste_selectionne);
+                }
+                else{
+                    // Sinon, on met à jour l'id de la liste actuelle
+                    base.majParametreIdListeActuelle(1, id_liste_selectionne);
+                }
+
+            }
+        });
+
+
         actualiser();
     }
 
@@ -137,7 +175,7 @@ public class MesListes extends Fragment {
 
     public void actualiser(){
         final EditText maVariableEditText = (EditText) getActivity().findViewById(R.id.editText_ajouter_liste);
-        ListView maVariableListView = (ListView) getActivity().findViewById(R.id.listView_ajouter_liste);
+        ListView maVariableListView = (ListView) getActivity().findViewById(R.id.listView_afficher_listes);
 
         // Récupération des données dans la BDD
         c = base.recupererListes();
@@ -154,6 +192,14 @@ public class MesListes extends Fragment {
 
         maVariableEditText.setText(""); // 3 - remise à vide de l'EditText
     }
+
+    /** Masquer le clavier **/
+    public static void hideKeyboardFrom(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
