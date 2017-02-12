@@ -100,6 +100,14 @@ public class DB {
         return mDb.insert(DATABASE_TABLE_LISTES, null, initialValues);
     }
 
+    public boolean viderListe(long id_liste) {
+        return mDb.delete(DATABASE_TABLE_ELEMENTS, KEY_ID_LISTE + "=" + id_liste, null) > 0;
+    }
+
+    public Cursor viderElementsCoches(long id_liste) {
+        return mDb.rawQuery("DELETE id_produit FROM elements WHERE (id_liste="+id_liste+"AND coche=1)", null);
+    }
+
     public boolean supprimerListeId(long id) {
         return mDb.delete(DATABASE_TABLE_LISTES, KEY_ID + "=" + id, null) > 0;
     }
@@ -177,7 +185,7 @@ public class DB {
 
     public Cursor recupererProduitsDeListe(long id_liste) {
 
-        return mDb.rawQuery("SELECT _id, nom FROM produits WHERE _id = (SELECT id_produit FROM elements WHERE id_liste="+id_liste+")", null);
+        return mDb.rawQuery("SELECT _id, nom FROM produits WHERE _id = (SELECT id_produit FROM elements WHERE id_liste="+id_liste+") ORDER BY nom asc", null);
     }
 
     public Cursor recupererProduitsOrdreAlphabetique() {

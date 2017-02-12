@@ -217,7 +217,8 @@ public class Liste extends Fragment {
         // Add the buttons
         builder.setPositiveButton(R.string.oui, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-
+                c.moveToFirst();
+                base.viderListe(c.getInt(c.getColumnIndex(DB.KEY_ID_LISTE_ACTUELLE)));
             }
         });
 
