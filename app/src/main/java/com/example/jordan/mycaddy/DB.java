@@ -214,7 +214,7 @@ public class DB {
     public boolean setElementCoche(int _id) {
         ContentValues args = new ContentValues();
         args.put(KEY_COCHE, 1);
-        return mDb.update(DATABASE_TABLE_PRODUITS, args, KEY_ID + "=" + _id, null) > 0;
+        return mDb.update(DATABASE_TABLE_ELEMENTS, args, KEY_ID + "=" + _id, null) > 0;
     }
 
     /* Gestion Table Parametres */
