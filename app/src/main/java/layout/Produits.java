@@ -49,6 +49,7 @@ public class Produits extends Fragment {
 
     private DB base;
     private Cursor c;
+    private long id_liste_selectionnee = 0;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -111,6 +112,8 @@ public class Produits extends Fragment {
     {
         // TODO Auto-generated method stub
         super.onActivityCreated(savedInstanceState);
+
+
 
         /** Spécification du ContextMenu **/
         ListView maVariableListView = (ListView) getActivity().findViewById(R.id.listView_ajouter_produit);
@@ -205,15 +208,13 @@ public class Produits extends Fragment {
 
                 LayoutInflater li = LayoutInflater.from(getContext());
                 // Récupérer la vue liée au xml de la fenêtre de dialogue
-                final View promptsView = li.inflate(R.layout.dialog, null);
+                final View promptsView = li.inflate(R.layout.dialog_assigner_produit_liste, null);
 
                 // Instance dialog
                 final Dialog dialog = new Dialog(getContext());
 
                 // Définition du titre
                 dialog.setTitle("Sélectionnez une liste");
-
-                dialog.setCancelable(true);
 
                 // Récupération du XML de la boite de dialogue
                 dialog.setContentView(R.layout.dialog_assigner_produit_liste);
@@ -227,18 +228,15 @@ public class Produits extends Fragment {
                 spinner.setAdapter(myAdapt);
 
                 // Définition du bouton d'ajout
-                final Button mButton = (Button) promptsView.findViewById(R.id.button);
+                final Button assigner = (Button) dialog.findViewById(R.id.button);
 
                 // OnItemSelectedListener
                 spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
                     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
 
-                        // Récupérer la catégorie du nouveau produit
-                        long id_liste_selectionnee = parent.getItemIdAtPosition(pos);
-
-                        base.ajouterElement(id_produit_selectionne, id_liste_selectionnee, 1, 0);
-
+                        // Sauvegarder l'ID de la liste sélectionnée
+                        setIdListeSelectionnee(parent.getItemIdAtPosition(pos));
                     }
 
                     public void onNothingSelected(AdapterView<?> arg0) {
@@ -248,8 +246,9 @@ public class Produits extends Fragment {
                 });
 
                 // Valider l'ajout du produit
-                mButton.setOnClickListener(new View.OnClickListener() {
+                assigner.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
+                        base.ajouterElement(id_produit_selectionne, getIdListeSelectionnee(), 1, 0);
                         dialog.dismiss();
                     }
                 });
@@ -263,6 +262,14 @@ public class Produits extends Fragment {
         });
 
         actualiser();
+    }
+
+    public void setIdListeSelectionnee(long id){
+        this.id_liste_selectionnee = id;
+    }
+
+    public long getIdListeSelectionnee(){
+        return id_liste_selectionnee;
     }
 
     @Override
