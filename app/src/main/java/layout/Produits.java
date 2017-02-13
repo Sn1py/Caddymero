@@ -168,9 +168,6 @@ public class Produits extends Fragment {
                                 // Récupérer la catégorie du nouveau produit
                                 String categorie = parent.getItemAtPosition(pos).toString();
 
-                                Toast.makeText(parent.getContext(), "Clicked : " +
-                                        parent.getItemAtPosition(pos).toString(), Toast.LENGTH_LONG).show();
-
                             }
 
                             public void onNothingSelected(AdapterView<?> arg0) {
@@ -185,7 +182,6 @@ public class Produits extends Fragment {
                                 String nom_produit = editText_NomProduit.getText().toString();
                                 base.ajouterProduit(nom_produit, 1, "test");
                                 actualiser();
-                                Toast.makeText(getContext(), "Texte : " + nom_produit, Toast.LENGTH_LONG).show();
                                 alertDialog.dismiss();
                             }
                         });
@@ -220,7 +216,7 @@ public class Produits extends Fragment {
                 dialog.setCancelable(true);
 
                 // Récupération du XML de la boite de dialogue
-                dialog.setContentView(R.layout.dialog);
+                dialog.setContentView(R.layout.dialog_assigner_produit_liste);
 
                 // Récupération des informations des listes
                 Cursor select = base.recupererListes();
