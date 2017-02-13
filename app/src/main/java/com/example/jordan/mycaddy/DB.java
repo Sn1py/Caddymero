@@ -252,5 +252,4 @@ public class DB {
     public Cursor recupererParametres() {
         return mDb.query(DATABASE_TABLE_PARAMETRES, new String[] {KEY_ID, KEY_ID_LISTE_ACTUELLE}, null, null, null, null, null);
     }
-
 }
