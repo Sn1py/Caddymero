@@ -131,61 +131,32 @@ public class Liste extends Fragment {
 
             ListView listView = (ListView) getActivity().findViewById(R.id.listView_afficher_produit);
 
-            //while(c.moveToNext())
-            //{
-                //if(c.isFirst())
-                //{
             c.moveToFirst();
-                    //Your code goes here in your case
-                    //Toast.makeText(getContext(), "ID liste : " + c.getString(c.getColumnIndex(DB.KEY_ID_LISTE_ACTUELLE)), Toast.LENGTH_LONG).show();
-                    cursor = base.recupererElementsId(c.getInt(c.getColumnIndex(DB.KEY_ID_LISTE_ACTUELLE)));
-                    //Toast.makeText(getContext(), "NB PRODUITS : " + cursor.getCount(), Toast.LENGTH_LONG).show();
-                    //c.close();
+            cursor = base.recupererElementsId(c.getInt(c.getColumnIndex(DB.KEY_ID_LISTE_ACTUELLE)));
+            //c.close();
 
-                //}
-            //}
-
-
-            cursor.moveToFirst();
-            //Your code goes here in your case
-            //Toast.makeText(getContext(), "ID liste : " + c.getString(c.getColumnIndex(DB.KEY_ID_LISTE_ACTUELLE)), Toast.LENGTH_LONG).show();
-            Cursor cursor_nom_produit = base.recupererProduitsDeListe(c.getInt(c.getColumnIndex(DB.KEY_ID_LISTE_ACTUELLE)));
-
-
-            //cursor_nom_produit = base.recupererNomsProduitsParElementsId(c.getInt(c.getColumnIndex(DB.KEY_ID_LISTE_ACTUELLE)));
-
-            getActivity().startManagingCursor(cursor_nom_produit);
-            String[] from_produits = new String[] { DB.KEY_NOM };
+            getActivity().startManagingCursor(cursor);
+            String[] from_produits = new String[] { DB.KEY_ID_PRODUIT };
             int[] to_produits = new int[] { R.id.nom };
-            SimpleCursorAdapter produits = new SimpleCursorAdapter(getContext(), R.layout.produit_row, cursor_nom_produit, from_produits, to_produits);
+            SimpleCursorAdapter produits = new SimpleCursorAdapter(getContext(), R.layout.produit_row, cursor, from_produits, to_produits);
             listView.setAdapter(produits);
             cocherElements(listView);
         }
-
-
-
-
-
-
-
-
-
 
         listView_afficher_elements.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                 // Récupérer le texte
-                 //TextView tv=(TextView) view;
-                 //tv.setPaintFlags(tv.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                 base.setElementCoche((int)id);
-                 }
-                 });
+         // Récupérer le texte
+         TextView tv=(TextView) view;
+         tv.setPaintFlags(tv.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+         base.setElementCoche((int)id);
+         }
+         });
 
-                 //actualiser();
+         //actualiser();
 
     }
-
 
 
 
@@ -217,7 +188,6 @@ public class Liste extends Fragment {
         for (int i = 0; i < lv.getCount(); i++) {
             View v;
             TextView tv;
-            EditText et;
             v = lv.getAdapter().getView(i, null, null);
             tv = (TextView) v;
             if(1 == 1) { // conditions liée à la bdd
@@ -257,10 +227,6 @@ public class Liste extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Toast.makeText(getContext(), "ON RESUME", Toast.LENGTH_LONG).show();
-        onDestroy();
-        onDetach();
-        onAttach(getContext());
     }
 
     // TODO: Rename method, update argument and hook method into UI event

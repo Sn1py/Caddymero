@@ -48,7 +48,7 @@ public class DB {
     private static final String DATABASE_TABLE_LISTES = "listes";
     private static final String DATABASE_TABLE_ELEMENTS = "elements";
     private static final String DATABASE_TABLE_PARAMETRES = "parametres";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     private final Context mCtx;
 
