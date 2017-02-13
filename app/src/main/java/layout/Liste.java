@@ -3,6 +3,7 @@ package layout;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -100,10 +102,10 @@ public class Liste extends Fragment {
 
 
         // Définition de la ListeView permettant d'afficher les éléments de la liste actuelle
-        //ListView listView_afficher_elements = (ListView) getActivity().findViewById(R.id.t);
+        ListView listView_afficher_elements = (ListView) getActivity().findViewById(R.id.listView_afficher_produit);
 
         /** Spécification du ContextMenu **/
-        //registerForContextMenu(listView_afficher_elements);
+        registerForContextMenu(listView_afficher_elements);
 
         TextView txtView = (TextView) getActivity().findViewById(R.id.textView);
 
@@ -150,11 +152,14 @@ public class Liste extends Fragment {
             Cursor cursor_nom_produit = base.recupererProduitsDeListe(c.getInt(c.getColumnIndex(DB.KEY_ID_LISTE_ACTUELLE)));
 
 
+            //cursor_nom_produit = base.recupererNomsProduitsParElementsId(c.getInt(c.getColumnIndex(DB.KEY_ID_LISTE_ACTUELLE)));
+
             getActivity().startManagingCursor(cursor_nom_produit);
             String[] from_produits = new String[] { DB.KEY_NOM };
             int[] to_produits = new int[] { R.id.nom };
             SimpleCursorAdapter produits = new SimpleCursorAdapter(getContext(), R.layout.produit_row, cursor_nom_produit, from_produits, to_produits);
             listView.setAdapter(produits);
+            cocherElements(listView);
         }
 
 
@@ -165,19 +170,20 @@ public class Liste extends Fragment {
 
 
 
-        /*
+
         listView_afficher_elements.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                  // Récupérer le texte
-                 TextView tv=(TextView) view;
+                 //TextView tv=(TextView) view;
                  //tv.setPaintFlags(tv.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                 base.setElementCoche((int)id);
                  }
                  });
 
-                 actualiser();
-                 }*/
+                 //actualiser();
+
     }
 
 
@@ -205,6 +211,21 @@ public class Liste extends Fragment {
         }
 
         return false;
+    }
+
+    public void cocherElements(ListView lv) {
+        for (int i = 0; i < lv.getCount(); i++) {
+            View v;
+            TextView tv;
+            EditText et;
+            v = lv.getAdapter().getView(i, null, null);
+            tv = (TextView) v;
+            if(1 == 1) { // conditions liée à la bdd
+                tv.setPaintFlags(tv.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                Toast.makeText(getContext(), tv.getText(), Toast.LENGTH_LONG).show();
+                // Le toast fonctionne bien et affiche les éléments de la liste alors pourquoi ça barre pas ?
+            }
+        }
     }
 
     public void viderListe(){
