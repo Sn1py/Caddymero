@@ -4,22 +4,24 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="layout.Produits"
-    android:theme="@style/TabTheme">
+    android:theme="@style/TabTheme" >
 
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/listView_ajouter_produit"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@+id/ajouter_produit" />
+        android:divider="@null"
+        android:dividerHeight="0dp" />
+
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/ajouter_produit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/add" />
+        android:layout_width="57dp"
+        android:layout_height="95dp"
+        android:src="@drawable/add"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"/>
+
 
 </RelativeLayout>
