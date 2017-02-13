@@ -207,7 +207,6 @@ public class Liste extends Fragment {
             default:
                 break;
         }
-
         return false;
     }
 
