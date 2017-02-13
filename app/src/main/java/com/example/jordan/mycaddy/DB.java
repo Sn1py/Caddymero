@@ -179,12 +179,11 @@ public class DB {
 
     public Cursor recupererProduits() {
 
-        return mDb.query(DATABASE_TABLE_PRODUITS, new String[] {KEY_ID, KEY_NOM,
-                KEY_ID_CATEGORIE,KEY_LOGO}, null, null, null, null, null);
+        //return mDb.query(DATABASE_TABLE_PRODUITS, new String[] {KEY_ID, KEY_NOM, KEY_ID_CATEGORIE,KEY_LOGO}, null, null, null, null, null);
+        return mDb.rawQuery("SELECT _id, nom, id_categorie, logo FROM produits ORDER BY nom ASC", null);
     }
 
     public Cursor recupererProduitsDeListe(long id_liste) {
-
         return mDb.rawQuery("SELECT _id, nom FROM produits WHERE _id = (SELECT id_produit FROM elements WHERE id_liste="+id_liste+") ORDER BY nom asc", null);
     }
 

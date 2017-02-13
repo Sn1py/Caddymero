@@ -257,7 +257,6 @@ public class Produits extends Fragment {
                 dialog.show();
                 dialog.setCanceledOnTouchOutside(true);
 
-
             }
         });
 
