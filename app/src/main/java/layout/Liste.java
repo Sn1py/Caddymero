@@ -108,6 +108,9 @@ public class Liste extends Fragment {
         // Instanciation du TextView
         TextView txtView = (TextView) getActivity().findViewById(R.id.textView);
 
+        // Récupérer le nombre de liste actuelle (0 si aucune, 1 sinon)
+        c = base.recupererParametres();
+
         // Si aucune liste n'est sélectionnée
         if(c.getCount() == 0){
             // Alors on ne masque pas le message d'information
