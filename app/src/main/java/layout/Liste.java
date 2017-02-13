@@ -15,14 +15,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.jordan.mycaddy.DB;
 import com.example.jordan.mycaddy.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -100,65 +103,89 @@ public class Liste extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
 
+        /** Message indiquant de sélectionner une liste **/
 
-        // Définition de la ListeView permettant d'afficher les éléments de la liste actuelle
-        ListView listView_afficher_elements = (ListView) getActivity().findViewById(R.id.listView_afficher_produit);
-
-        /** Spécification du ContextMenu **/
-        registerForContextMenu(listView_afficher_elements);
-
+        // Instanciation du TextView
         TextView txtView = (TextView) getActivity().findViewById(R.id.textView);
-
-        /** Récupération de la liste actuelle **/
-        c = base.recupererParametres();
-        getActivity().startManagingCursor(c);
-        String[] from = new String[] { DB.KEY_ID_LISTE_ACTUELLE };
-        int[] to = new int[] { R.id.nom };
-        SimpleCursorAdapter notes = new SimpleCursorAdapter(getContext(), R.layout.produit_row, c, from, to);
-
-        //Toast.makeText(getContext(), "nombre liste actuelle : " + c.getCount(), Toast.LENGTH_LONG).show();
 
         // Si aucune liste n'est sélectionnée
         if(c.getCount() == 0){
             // Alors on ne masque pas le message d'information
         }
-        else{
+        else {
             // Sinon, on masque le message d'information
             txtView.setVisibility(View.GONE);
-
-            // Et on affiche le contenu de la liste
-            /** Récupération de la liste actuelle **/
-
-            ListView listView = (ListView) getActivity().findViewById(R.id.listView_afficher_produit);
-
-            c.moveToFirst();
-            cursor = base.recupererElementsId(c.getInt(c.getColumnIndex(DB.KEY_ID_LISTE_ACTUELLE)));
-            //c.close();
-
-            getActivity().startManagingCursor(cursor);
-            String[] from_produits = new String[] { DB.KEY_ID_PRODUIT };
-            int[] to_produits = new int[] { R.id.nom };
-            SimpleCursorAdapter produits = new SimpleCursorAdapter(getContext(), R.layout.produit_row, cursor, from_produits, to_produits);
-            listView.setAdapter(produits);
-            cocherElements(listView);
         }
 
-        listView_afficher_elements.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        /** Récupération des listes **/
+        Cursor listes = base.recupererListes();
 
-         // Récupérer le texte
-         TextView tv=(TextView) view;
-         tv.setPaintFlags(tv.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-         base.setElementCoche((int)id);
-         }
-         });
+        /** Création du spinner et ajout des listes*/
+        final Spinner spinner_listes = (Spinner) getActivity().findViewById(R.id.spinner_listes);
+        SimpleCursorAdapter sca = new SimpleCursorAdapter(getContext(), android.R.layout.two_line_list_item, listes, new String[] {DB.KEY_NOM, DB.KEY_ID,}, new int[] {android.R.id.text1});
+        spinner_listes.setAdapter(sca);
 
-         //actualiser();
+        /** Afficher les éléments de la liste sélectionnée **/
+        spinner_listes.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+
+                /* Définir la liste sélectionnée dans le spinner comme liste actuelle */
+
+                // Récupérer le nombre de liste actuelle (0 si aucune, 1 sinon)
+                c = base.recupererParametres();
+
+                // On récupère l'ID de la liste sélectionnée
+                final long id_liste_selectionnee =  parent.getItemIdAtPosition(pos);
+
+                // Affichage de la liste sélectionnée
+                Toast.makeText(getContext(), "ID Liste sélectionnée : " + id_liste_selectionnee, Toast.LENGTH_LONG).show();
+
+                // Si aucune liste n'est sélectionnée
+                if(c.getCount() == 0){
+                    // on ajoute la liste sélectionnée dans la table paramètres
+                    base.ajouterParametre(id_liste_selectionnee);
+                }
+                else{
+                    // Sinon, on met à jour l'id de la liste actuelle dans la table paramètres
+                    base.majParametreIdListeActuelle(1, id_liste_selectionnee);
+                }
+
+
+                /* Récupérer les éléments de la liste actuelle (sélectionnée dans le spinner) */
+
+                // Récupérer à nouveau l'ID de la liste actuelle
+                c = base.recupererParametres();
+
+                // Instanciation du ListView
+                ListView listView = (ListView) getActivity().findViewById(R.id.listView_afficher_produit);
+
+                // Remise du curseur à zéro (à définir pourquoi c'est nécessaire, je sais juste qu'il faut le faire)
+                c.moveToFirst();
+
+                // Affichage de la liste actuelle
+                Toast.makeText(getContext(), "ID liste actuelle : " + c.getInt(c.getColumnIndex(DB.KEY_ID_LISTE_ACTUELLE)), Toast.LENGTH_LONG).show();
+
+                // Récupérer les produits de la liste dont l'ID et celui de la liste actuelle
+                cursor = base.recupererElementsId(c.getInt(c.getColumnIndex(DB.KEY_ID_LISTE_ACTUELLE)));
+
+                // Ajout des produits dans la ListView
+                getActivity().startManagingCursor(cursor);
+                String[] from_produits = new String[] { DB.KEY_ID_PRODUIT };
+                int[] to_produits = new int[] { R.id.nom };
+                SimpleCursorAdapter produits = new SimpleCursorAdapter(getContext(), R.layout.produit_row, cursor, from_produits, to_produits);
+                listView.setAdapter(produits);
+
+                /** Rayer les éléments dont l'attribut coche vaut 1 en base **/
+                cocherElements(listView);
+            }
+
+            public void onNothingSelected(AdapterView<?> arg0) {
+                // TODO Auto-generated method stub
+                // Aucune action à réaliser ici
+            }
+        });
     }
-
-
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
