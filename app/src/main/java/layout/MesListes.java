@@ -156,26 +156,30 @@ public class MesListes extends Fragment {
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
+        MenuItem ajouter_liste = menu.findItem(R.id.ajouter_liste);
         MenuItem vider_element_barres = menu.findItem(R.id.vider_element_barres);
         MenuItem vider_liste = menu.findItem(R.id.vider_liste);
+        ajouter_liste.setVisible(false);
         vider_element_barres.setVisible(false);
         vider_liste.setVisible(false);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
         switch (item.getItemId()) {
-            case R.id.vider_element_barres:
-
+            case R.id.ajouter_liste:
                 return false;
+
             case R.id.vider_liste:
-                // Not implemented here
                 return false;
-            default:
-                break;
-        }
 
-        return false;
+            case R.id.vider_element_barres:
+                return false;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     public void actualiser(){

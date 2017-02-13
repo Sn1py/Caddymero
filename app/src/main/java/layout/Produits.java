@@ -276,16 +276,21 @@ public class Produits extends Fragment {
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        MenuItem item = menu.findItem(R.id.vider_element_barres);
-        MenuItem item2 = menu.findItem(R.id.vider_liste);
-        item.setVisible(false);
-        item2.setVisible(false);
+        MenuItem ajouter_liste = menu.findItem(R.id.ajouter_liste);
+        MenuItem vider_element_barres = menu.findItem(R.id.vider_element_barres);
+        MenuItem vider_liste = menu.findItem(R.id.vider_liste);
+        ajouter_liste.setVisible(false);
+        vider_element_barres.setVisible(false);
+        vider_liste.setVisible(false);
     }
 
     // Gestion de l'action des boutons du menu
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
+            case R.id.ajouter_liste:
+                return false;
+
             case R.id.vider_liste:
                 return false;
 

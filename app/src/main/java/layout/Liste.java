@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -103,32 +104,13 @@ public class Liste extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
 
-        /** Message indiquant de sélectionner une liste **/
-
-        // Instanciation du TextView
-        TextView txtView = (TextView) getActivity().findViewById(R.id.textView);
-
-        // Récupérer le nombre de liste actuelle (0 si aucune, 1 sinon)
-        c = base.recupererParametres();
-
-        // Si aucune liste n'est sélectionnée
-        if(c.getCount() == 0){
-            // Alors on ne masque pas le message d'information
-        }
-        else {
-            // Sinon, on masque le message d'information
-            txtView.setVisibility(View.GONE);
-        }
-
-        /** Récupération des listes **/
-        Cursor listes = base.recupererListes();
-
-        /** Création du spinner et ajout des listes*/
         final Spinner spinner_listes = (Spinner) getActivity().findViewById(R.id.spinner_listes);
-        SimpleCursorAdapter sca = new SimpleCursorAdapter(getContext(), android.R.layout.two_line_list_item, listes, new String[] {DB.KEY_NOM, DB.KEY_ID,}, new int[] {android.R.id.text1});
-        spinner_listes.setAdapter(sca);
+
+        // Actualiser le contenu du fragment
+        actualiser();
 
         /** Afficher les éléments de la liste sélectionnée **/
+        // Par défaut, c'est la liste dont l'ID est un qui est affichée (première liste du spinner)
         spinner_listes.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
@@ -180,7 +162,7 @@ public class Liste extends Fragment {
                 listView.setAdapter(produits);
 
                 /** Rayer les éléments dont l'attribut coche vaut 1 en base **/
-                cocherElements(listView);
+                //cocherElements(listView);
             }
 
             public void onNothingSelected(AdapterView<?> arg0) {
@@ -200,17 +182,50 @@ public class Liste extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
         switch (item.getItemId()) {
-            case R.id.vider_element_barres:
-                // Supprimer les éléments cochés
+            case R.id.ajouter_liste:
+                ajouterListe();
+                actualiser();
                 return true;
+
             case R.id.vider_liste:
                 viderListe();
                 return true;
+
+            case R.id.vider_element_barres:
+                // Fonction à créer
+                return true;
+
             default:
-                break;
+                return super.onOptionsItemSelected(item);
         }
-        return false;
+    }
+
+    public void actualiser(){
+        /** Message indiquant de sélectionner une liste **/
+        // Instanciation du TextView
+        TextView txtView = (TextView) getActivity().findViewById(R.id.textView);
+
+        // Récupérer le nombre de liste actuelle (0 si aucune, 1 sinon)
+        c = base.recupererParametres();
+
+        // Si aucune liste n'est sélectionnée
+        if(c.getCount() == 0){
+            // Alors on ne masque pas le message d'information
+        }
+        else {
+            // Sinon, on masque le message d'information
+            txtView.setVisibility(View.GONE);
+        }
+
+        /** Récupération des listes **/
+        Cursor listes = base.recupererListes();
+
+        /** Création du spinner et ajout des listes*/
+        final Spinner spinner_listes = (Spinner) getActivity().findViewById(R.id.spinner_listes);
+        SimpleCursorAdapter sca = new SimpleCursorAdapter(getContext(), android.R.layout.two_line_list_item, listes, new String[] {DB.KEY_NOM, DB.KEY_ID,}, new int[] {android.R.id.text1});
+        spinner_listes.setAdapter(sca);
     }
 
     public void cocherElements(ListView lv) {
@@ -225,6 +240,42 @@ public class Liste extends Fragment {
                 // Le toast fonctionne bien et affiche les éléments de la liste alors pourquoi ça barre pas ?
             }
         }
+    }
+
+    public void ajouterListe(){
+        LayoutInflater li = LayoutInflater.from(getContext());
+        // Récupérer la vue liée au xml de la fenêtre de dialogue
+        final View promptsView = li.inflate(R.layout.dialog, null);
+
+        // Définir l'EditText
+        final EditText editText_nomListe = (EditText) promptsView.findViewById(R.id.editText);
+
+        // Instancier la boite de dialogue
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+
+        // Associer la vue du XML à la boite de dialogue
+        alertDialogBuilder.setView(promptsView);
+
+        // Titre de la boite de dialogue
+        alertDialogBuilder.setTitle("Nouvelle liste");
+
+        // Création de la boite de dialogue
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // Définition du bouton d'ajout
+        final Button bouton_ajouter_liste = (Button) promptsView.findViewById(R.id.button);
+
+        // Valider l'ajout de la liste
+        bouton_ajouter_liste.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                String nom_liste = editText_nomListe.getText().toString();
+                base.ajouterListe(nom_liste);
+                actualiser();
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog.show();
+        alertDialog.setCanceledOnTouchOutside(true);
     }
 
     public void viderListe(){

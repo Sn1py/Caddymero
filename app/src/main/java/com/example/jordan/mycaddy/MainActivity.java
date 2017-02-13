@@ -38,7 +38,7 @@ import layout.Produits;
 import static com.example.jordan.mycaddy.R.id.container;
 
 public class MainActivity extends AppCompatActivity
-        implements Produits.OnFragmentInteractionListener, Liste.OnFragmentInteractionListener, MesListes.OnFragmentInteractionListener {
+        implements Produits.OnFragmentInteractionListener, Liste.OnFragmentInteractionListener {
 
 
     /**
@@ -84,18 +84,20 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
         switch (item.getItemId()) {
-            case R.id.vider_element_barres:
-
+            case R.id.ajouter_liste:
                 return false;
+
             case R.id.vider_liste:
-                // Not implemented here
                 return false;
-            default:
-                break;
-        }
 
-        return false;
+            case R.id.vider_element_barres:
+                return false;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 
@@ -158,8 +160,6 @@ public class MainActivity extends AppCompatActivity
 
                 case 2: return new Liste();
 
-                case 3: return new MesListes();
-
                 default:
                     break;
             }
@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            return 2;
         }
 
         @Override
@@ -182,8 +182,6 @@ public class MainActivity extends AppCompatActivity
                     return "Produits";
                 case 1:
                     return "Liste";
-                case 2:
-                    return "Mes listes";
             }
             return null;
         }
