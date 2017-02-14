@@ -192,7 +192,7 @@ public class DB {
     public Cursor recupererProduitsParId(long id) {
 
         //return mDb.query(DATABASE_TABLE_PRODUITS, new String[] {KEY_ID, KEY_NOM, KEY_ID_CATEGORIE,KEY_LOGO}, null, null, null, null, null);
-        return mDb.rawQuery("SELECT _id, nom FROM produits WHERE _id="+id, null);
+        return mDb.rawQuery("SELECT _id, nom, logo FROM produits WHERE _id="+id, null);
     }
 
     public Cursor recupererProduitsDeListe(long id_liste) {
