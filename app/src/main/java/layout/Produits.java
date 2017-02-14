@@ -107,7 +107,6 @@ public class Produits extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_produits, container, false);
 
-
         return view;
     }
 
@@ -174,7 +173,7 @@ public class Produits extends Fragment {
                             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
 
                                 // Récupérer la catégorie du nouveau produit
-                                String categorie = parent.getItemAtPosition(pos).toString();
+                                //setIdCategorie(id);
                             }
 
                             public void onNothingSelected(AdapterView<?> arg0) {
@@ -309,13 +308,43 @@ public class Produits extends Fragment {
     public void insererCategories(){
         base.ajouterCategorie("Fruits", "fruits");      // 1
         base.ajouterCategorie("Legumes", "legumes");    // 2
+        base.ajouterCategorie("Viandes", "viandes");     // 3
+        base.ajouterCategorie("Boissons", "boissons");   // 4
     }
 
     public void insererProduits(){
+
+        // Synthaxe : base.ajouterProduit(Nom du produit, id de la catégorie, logo du produit)
+
+        // Fruits
         base.ajouterProduit("Pomme", 1, "logo");
         base.ajouterProduit("Poire", 1, "logo");
+        base.ajouterProduit("Fraise", 1, "logo");
+        base.ajouterProduit("Banane", 1, "logo");
+        base.ajouterProduit("Orange", 1, "logo");
+        base.ajouterProduit("Abricot", 1, "logo");
+
+        // Legumes
         base.ajouterProduit("Carotte", 2, "logo");
         base.ajouterProduit("Salade", 2, "logo");
+        base.ajouterProduit("Courgette", 2, "logo");
+        base.ajouterProduit("Radis", 2, "logo");
+        base.ajouterProduit("Poivron", 2, "logo");
+        base.ajouterProduit("Pommes de terre", 2, "logo");
+
+        // Viandes
+        base.ajouterProduit("Boeuf", 3, "logo");
+        base.ajouterProduit("Poulet", 3, "logo");
+        base.ajouterProduit("Cheval", 3, "logo");
+        base.ajouterProduit("Mouton", 3, "logo");
+        base.ajouterProduit("Porc", 3, "logo");
+
+        // Boissons
+        base.ajouterProduit("Eau", 4, "logo");
+        base.ajouterProduit("Coca Cola", 4, "logo");
+        base.ajouterProduit("Jus de fruits", 4, "logo");
+        base.ajouterProduit("Bière", 4, "logo");
+        base.ajouterProduit("Champagne", 4, "logo");
     }
 
     @Override
