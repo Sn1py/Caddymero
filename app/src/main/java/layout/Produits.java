@@ -254,7 +254,7 @@ public class Produits extends Fragment {
                         te.moveToFirst();
 
                         // Spécification de l'icone
-                        String icone = "restaurant.png";
+                        String icone = "android.resource://com.example.jordan.mycaddy/drawable/restaurant";
 
                         // Ajout du produit à la liste voulue
                         base.ajouterElement(id_produit_selectionne, te.getString(te.getColumnIndex(DB.KEY_NOM)), getIdListeSelectionnee(), 1, 0, icone);
