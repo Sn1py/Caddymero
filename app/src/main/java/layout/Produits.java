@@ -247,12 +247,29 @@ public class Produits extends Fragment {
                 // Valider l'ajout du produit dans éléments
                 assigner.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
-
+                        // Récupération de l'ID du produit sélectionné
                         Cursor te = base.recupererProduitsParId(id_produit_selectionne);
+
+                        // Positionnement du cursor en première poition
                         te.moveToFirst();
+
+                        // Spécification de l'icone
                         String icone = "restaurant.png";
+
+                        // Ajout du produit à la liste voulue
                         base.ajouterElement(id_produit_selectionne, te.getString(te.getColumnIndex(DB.KEY_NOM)), getIdListeSelectionnee(), 1, 0, icone);
+
+                        // Suppression de la boite de dialogue
                         dialog.dismiss();
+
+                        // Récupération des fragments de l'application
+                        List<Fragment> frags = getFragmentManager().getFragments();
+
+                        // Sélection du fragment 1 qui correspond à Liste.java
+                        Fragment fragListe = frags.get(1);
+
+                        // Appel à la fonction onResume qui va actualiser le contenu
+                        fragListe.onResume();
                     }
                 });
 

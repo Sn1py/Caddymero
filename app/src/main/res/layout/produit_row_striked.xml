@@ -6,8 +6,8 @@
     <ImageView
         android:contentDescription="row"
         android:id="@+id/icon"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_marginLeft="6dp"
         android:layout_marginRight="6dp"
         android:layout_marginTop="5dp"
@@ -18,7 +18,7 @@
     <TextView android:id="@+id/nom_sriked"
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:background="@drawable/rayer"
         android:textSize="19dp" />
 

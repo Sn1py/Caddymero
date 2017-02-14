@@ -49,6 +49,7 @@ public class Liste extends Fragment {
     private Cursor c;
     private Cursor cursor;
     private DB base;
+    private int spinnerPosition;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -193,11 +194,11 @@ public class Liste extends Fragment {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                TextView tv;
-                //tv = (TextView) view;
-                //tv.setPaintFlags(tv.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 // Définition de l'élément comme coché en base de données
                 base.setElementCoche(id);
+
+                // Actualisation du fragment
+                actualiser();
             }
         });
 
@@ -234,21 +235,9 @@ public class Liste extends Fragment {
     }
 
     public void actualiser(){
-        /** Message indiquant de sélectionner une liste **/
-        // Instanciation du TextView
-        TextView txtView = (TextView) getActivity().findViewById(R.id.textView);
 
         // Récupérer le nombre de liste actuelle (0 si aucune, 1 sinon)
         c = base.recupererParametres();
-
-        // Si aucune liste n'est sélectionnée
-        if(c.getCount() == 0){
-            // Alors on ne masque pas le message d'information
-        }
-        else {
-            // Sinon, on masque le message d'information
-            txtView.setVisibility(View.GONE);
-        }
 
         /** Récupération des listes **/
         Cursor listes = base.recupererListes();
@@ -257,6 +246,7 @@ public class Liste extends Fragment {
         final Spinner spinner_listes = (Spinner) getActivity().findViewById(R.id.spinner_listes);
         SimpleCursorAdapter sca = new SimpleCursorAdapter(getContext(), android.R.layout.two_line_list_item, listes, new String[] {DB.KEY_NOM, DB.KEY_ID,}, new int[] {android.R.id.text1});
         spinner_listes.setAdapter(sca);
+        spinner_listes.setSelection(getSpinnerPosition());
     }
 
     public void ajouterListe(){
@@ -347,9 +337,19 @@ public class Liste extends Fragment {
         dialog.show();
     }
 
+    public void setSpinnerPosition(int pos){
+        this.spinnerPosition = pos;
+    }
+
+    public int getSpinnerPosition (){
+        return spinnerPosition;
+    }
+
     @Override
     public void onResume() {
         super.onResume();
+        actualiser();
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
