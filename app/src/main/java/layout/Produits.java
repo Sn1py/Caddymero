@@ -61,6 +61,8 @@ public class Produits extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private int categorieSelectionee = 0;
+
     private OnFragmentInteractionListener mListener;
 
     public Produits() {
@@ -173,6 +175,10 @@ public class Produits extends Fragment {
                             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
 
                                 // Récupérer la catégorie du nouveau produit
+                                String categorie = parent.getItemAtPosition(pos).toString();
+
+                                categorieSelectionee = (int)id;
+
                                 //setIdCategorie(id);
                             }
 
@@ -186,7 +192,10 @@ public class Produits extends Fragment {
                         mButton.setOnClickListener(new View.OnClickListener() {
                             public void onClick(View v) {
                                 String nom_produit = editText_NomProduit.getText().toString();
-                                base.ajouterProduit(nom_produit, 1, "test");
+                                Cursor c = base.recupererCategorieId(categorieSelectionee);
+                                c.moveToFirst();
+                                String logo = c.getString(c.getColumnIndex("logo"));
+                                base.ajouterProduit(nom_produit, categorieSelectionee, logo);
                                 actualiser();
                                 alertDialog.dismiss();
                             }
@@ -260,7 +269,12 @@ public class Produits extends Fragment {
                         String icone = "android.resource://com.example.jordan.mycaddy/drawable/restaurant";
 
                         // Ajout du produit à la liste voulue
-                        base.ajouterElement(id_produit_selectionne, te.getString(te.getColumnIndex(DB.KEY_NOM)), getIdListeSelectionnee(), 1, 0, icone);
+
+                        Cursor c = base.recupererProduitsParId(id_produit_selectionne);
+                        c.moveToFirst();
+                        String logo = c.getString(c.getColumnIndex("logo"));
+
+                        base.ajouterElement(id_produit_selectionne, te.getString(te.getColumnIndex(DB.KEY_NOM)), getIdListeSelectionnee(), 1, 0, logo);
 
                         // Suppression de la boite de dialogue
                         dialog.dismiss();
