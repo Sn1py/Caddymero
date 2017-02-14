@@ -165,13 +165,13 @@ public class Liste extends Fragment {
 
                 // Ajout des produits dans la ListView
                 getActivity().startManagingCursor(cursor);
-                String[] from_produits = new String[] { DB.KEY_ID_PRODUIT };
+                String[] from_produits = new String[] { DB.KEY_NOM_PRODUIT };
                 int[] to_produits = new int[] { R.id.nom };
                 SimpleCursorAdapter produits = new SimpleCursorAdapter(getContext(), R.layout.produit_row, cursor, from_produits, to_produits);
 
                 /** Rayer les éléments dont l'attribut coche vaut 1 en base **/
                 getActivity().startManagingCursor(cursor_striked);
-                String[] from_produits_striked = new String[] { DB.KEY_ID_PRODUIT };
+                String[] from_produits_striked = new String[] { DB.KEY_NOM_PRODUIT };
                 int[] to_produits_striked = new int[] { R.id.nom_sriked };
                 SimpleCursorAdapter produits_striked = new SimpleCursorAdapter(getContext(), R.layout.produit_row_striked, cursor_striked, from_produits_striked, to_produits_striked);
 

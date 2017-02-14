@@ -123,6 +123,8 @@ public class Produits extends Fragment {
         // Bouton d'ajout d'un produit
         final FloatingActionButton ajouter_produit = (FloatingActionButton) getView().findViewById(R.id.ajouter_produit);
         // Si click sur le bouton
+
+        //A CORRIGER DOUBLE APPUI
         ajouter_produit.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -245,10 +247,14 @@ public class Produits extends Fragment {
                     }
                 });
 
-                // Valider l'ajout du produit
+                // Valider l'ajout du produit dans éléments
                 assigner.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
-                        base.ajouterElement(id_produit_selectionne, getIdListeSelectionnee(), 1, 0);
+
+                        Cursor te = base.recupererProduitsParId(id_produit_selectionne);
+                        te.moveToFirst();
+
+                        base.ajouterElement(id_produit_selectionne, te.getString(te.getColumnIndex(DB.KEY_NOM)), getIdListeSelectionnee(), 1, 0);
                         dialog.dismiss();
                     }
                 });

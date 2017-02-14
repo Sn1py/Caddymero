@@ -17,6 +17,7 @@ public class DB {
     public static final String KEY_ID_LISTE_ACTUELLE = "id_liste_actuelle";
     public static final String KEY_ID_LISTE = "id_liste";
     public static final String KEY_NOM = "nom";
+    public static final String KEY_NOM_PRODUIT = "nom_produit";
     public static final String KEY_QUANTITE = "quantite";
     public static final String KEY_LOGO = "logo";
     public static final String KEY_COCHE = "coche";
@@ -37,7 +38,7 @@ public class DB {
             + "nom text not null, id_categorie integer not null, logo text not null);";
     private static final String DATABASE_CREATE_ELEMENTS =
             "create table elements (_id integer primary key autoincrement, "
-                    + "id_produit integer not null, id_liste integer not null, quantite integer not null, coche integer not null);";
+                    + "id_produit integer not null, nom_produit text not null, id_liste integer not null, quantite integer not null, coche integer not null);";
     private static final String DATABASE_CREATE_PARAMETRES =
             "create table parametres (_id integer primary key autoincrement, "
                     + "id_liste_actuelle integer);";
@@ -204,12 +205,13 @@ public class DB {
 
     /* Gestion Table Elements */
 
-    public long ajouterElement(long id_produit, long id_liste, int quantite, int coche) {
+    public long ajouterElement(long id_produit, String nom_produit, long id_liste, int quantite, int coche) {
 
         // A corriger avec les nouveaux champs
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(KEY_ID_PRODUIT, id_produit);
+        initialValues.put("nom_produit", nom_produit);
         initialValues.put(KEY_ID_LISTE, id_liste);
         initialValues.put(KEY_QUANTITE, quantite);
         initialValues.put(KEY_COCHE, coche);
@@ -231,12 +233,12 @@ public class DB {
 
     public Cursor recupererElementsNonCochesId(long id) {
         //return mDb.query(DATABASE_TABLE_ELEMENTS, new String[] {KEY_ID, KEY_LOGO}, null, new String[] {KEY_ID, String.valueOf(id)}, null, null, null);
-        return mDb.rawQuery("SELECT _id, id_produit FROM elements WHERE id_liste="+id+" AND coche=0",null);
+        return mDb.rawQuery("SELECT _id, id_produit, nom_produit FROM elements WHERE id_liste="+id+" AND coche=0",null);
     }
 
     public Cursor recupererElementsCochesId(long id) {
         //return mDb.query(DATABASE_TABLE_ELEMENTS, new String[] {KEY_ID, KEY_LOGO}, null, new String[] {KEY_ID, String.valueOf(id)}, null, null, null);
-        return mDb.rawQuery("SELECT _id, id_produit FROM elements WHERE id_liste="+id+" AND coche=1",null);
+        return mDb.rawQuery("SELECT _id, id_produit, nom_produit FROM elements WHERE id_liste="+id+" AND coche=1",null);
     }
 
     public Cursor recupererNomsProduitsParElementsId(long id) {
