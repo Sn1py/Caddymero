@@ -1,11 +1,13 @@
 package layout;
 
+import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AlertDialog;
@@ -27,7 +29,11 @@ import com.example.jordan.mycaddy.DB;
 import com.example.jordan.mycaddy.R;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.StringTokenizer;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -149,10 +155,11 @@ public class Liste extends Fragment {
                 c.moveToFirst();
 
                 // Affichage de la liste actuelle
-                Toast.makeText(getContext(), "ID liste actuelle : " + c.getInt(c.getColumnIndex(DB.KEY_ID_LISTE_ACTUELLE)), Toast.LENGTH_LONG).show();
+                //Toast.makeText(getContext(), "ID liste actuelle : " + c.getInt(c.getColumnIndex(DB.KEY_ID_LISTE_ACTUELLE)), Toast.LENGTH_LONG).show();
 
-                // Récupérer les produits de la liste dont l'ID et celui de la liste actuelle
+                // Récupérer les id des produits de la liste dont l'ID et celui de la liste actuelle
                 cursor = base.recupererElementsId(c.getInt(c.getColumnIndex(DB.KEY_ID_LISTE_ACTUELLE)));
+
 
                 // Ajout des produits dans la ListView
                 getActivity().startManagingCursor(cursor);
@@ -161,8 +168,11 @@ public class Liste extends Fragment {
                 SimpleCursorAdapter produits = new SimpleCursorAdapter(getContext(), R.layout.produit_row, cursor, from_produits, to_produits);
                 listView.setAdapter(produits);
 
+
                 /** Rayer les éléments dont l'attribut coche vaut 1 en base **/
-                //cocherElements(listView);
+
+                // Une fois que la listView est remplie, on envoie la ListView, la view et le cursor contenant les id des produits de la liste sélectionnée
+                cocherElements(listView, view, cursor);
             }
 
             public void onNothingSelected(AdapterView<?> arg0) {
@@ -170,6 +180,19 @@ public class Liste extends Fragment {
                 // Aucune action à réaliser ici
             }
         });
+
+        final ListView lv = (ListView) getActivity().findViewById(R.id.listView_afficher_produit);
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                TextView tv;
+                tv = (TextView) view;
+                tv.setPaintFlags(tv.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                // Définition de l'élément comme coché en base de données
+                base.setElementCoche(id);
+            }
+        });
+
     }
 
     @Override
@@ -228,9 +251,34 @@ public class Liste extends Fragment {
         spinner_listes.setAdapter(sca);
     }
 
-    public void cocherElements(ListView lv) {
-        for (int i = 0; i < lv.getCount(); i++) {
+    public void cocherElements(ListView lv, View v, Cursor c) {
+
+        // On met le cursor au début
+        c.moveToFirst();
+
+        for (int i = 0; i < c.getCount(); i++) {
+
+            // On récupère l'ID de chaque produit tour à tour
+            long id_produit = c.getLong(c.getColumnIndex(DB.KEY_ID_PRODUIT));
+
+            // On teste si le procduit est coché
+            boolean isCoche = base.isElementCoche(id_produit);
+
+            if(isCoche){
+                Toast.makeText(getContext(), "coche : " + id_produit, Toast.LENGTH_LONG).show();
+                View view = lv.getAdapter().getView(i, null, null);
+                TextView tv;
+                tv = (TextView) view;
+                Toast.makeText(getContext(), "texte : " + tv.getText().toString(), Toast.LENGTH_LONG).show();
+                // Le texte récupéré est bien celui à cocher, mais l'action n'est pas réalisée
+                tv.setPaintFlags(tv.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            }
+
+            c.moveToNext();
+
+            /*
             View v;
+
             TextView tv;
             v = lv.getAdapter().getView(i, null, null);
             tv = (TextView) v;
@@ -239,7 +287,18 @@ public class Liste extends Fragment {
                 Toast.makeText(getContext(), tv.getText(), Toast.LENGTH_LONG).show();
                 // Le toast fonctionne bien et affiche les éléments de la liste alors pourquoi ça barre pas ?
             }
+            */
+
+
+
+
+
+            // 1 Je prends le premier élément de la listview => Il y a AUTANT d'éléments dans la ListVie que dans le Cursor
+            // 2 Je récupère son ID
+            // 3 Je regarde si il est coché grâce à la fonction isElementCoche()
+            // 4 Si oui je coche sinon je ne fais rien et je passe à l'élément suivant de la textview
         }
+
     }
 
     public void ajouterListe(){

@@ -183,6 +183,12 @@ public class DB {
         return mDb.rawQuery("SELECT _id, nom, id_categorie, logo FROM produits ORDER BY nom ASC", null);
     }
 
+    public Cursor recupererProduitsParId(long id) {
+
+        //return mDb.query(DATABASE_TABLE_PRODUITS, new String[] {KEY_ID, KEY_NOM, KEY_ID_CATEGORIE,KEY_LOGO}, null, null, null, null, null);
+        return mDb.rawQuery("SELECT _id, nom FROM produits WHERE _id="+id, null);
+    }
+
     public Cursor recupererProduitsDeListe(long id_liste) {
         return mDb.rawQuery("SELECT _id, nom FROM produits WHERE _id = (SELECT id_produit FROM elements WHERE id_liste="+id_liste+") ORDER BY nom asc", null);
     }
@@ -227,10 +233,19 @@ public class DB {
         return mDb.rawQuery("SELECT a.nom FROM produits a INNER JOIN elements b ON a._id=b.id_produit WHERE b._id = ?", new String[]{String.valueOf(id)});
     }
 
-    public boolean setElementCoche(int _id) {
+    public boolean setElementCoche(long _id) {
         ContentValues args = new ContentValues();
         args.put(KEY_COCHE, 1);
         return mDb.update(DATABASE_TABLE_ELEMENTS, args, KEY_ID + "=" + _id, null) > 0;
+    }
+
+    public boolean isElementCoche(long id_produit) {
+        Cursor cu = mDb.rawQuery("SELECT coche from elements WHERE id_produit="+id_produit, null);
+        cu.moveToFirst();
+        int etat = cu.getInt(cu.getColumnIndex("coche"));
+
+        if(etat == 1) return true;
+        else return false;
     }
 
     /* Gestion Table Parametres */
