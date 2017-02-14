@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.jordan.mycaddy.DB;
+import com.example.jordan.mycaddy.MergeAdapter;
 import com.example.jordan.mycaddy.R;
 
 import java.util.ArrayList;
@@ -158,7 +159,8 @@ public class Liste extends Fragment {
                 //Toast.makeText(getContext(), "ID liste actuelle : " + c.getInt(c.getColumnIndex(DB.KEY_ID_LISTE_ACTUELLE)), Toast.LENGTH_LONG).show();
 
                 // Récupérer les id des produits de la liste dont l'ID et celui de la liste actuelle
-                cursor = base.recupererElementsId(c.getInt(c.getColumnIndex(DB.KEY_ID_LISTE_ACTUELLE)));
+                cursor = base.recupererElementsNonCochesId(c.getInt(c.getColumnIndex(DB.KEY_ID_LISTE_ACTUELLE)));
+                Cursor cursor_striked = base.recupererElementsCochesId(c.getInt(c.getColumnIndex(DB.KEY_ID_LISTE_ACTUELLE)));
 
 
                 // Ajout des produits dans la ListView
@@ -166,8 +168,18 @@ public class Liste extends Fragment {
                 String[] from_produits = new String[] { DB.KEY_ID_PRODUIT };
                 int[] to_produits = new int[] { R.id.nom };
                 SimpleCursorAdapter produits = new SimpleCursorAdapter(getContext(), R.layout.produit_row, cursor, from_produits, to_produits);
-                listView.setAdapter(produits);
 
+                getActivity().startManagingCursor(cursor_striked);
+                String[] from_produits_striked = new String[] { DB.KEY_ID_PRODUIT };
+                int[] to_produits_striked = new int[] { R.id.nom_sriked };
+                SimpleCursorAdapter produits_striked = new SimpleCursorAdapter(getContext(), R.layout.produit_row_striked, cursor_striked, from_produits_striked, to_produits_striked);
+
+                MergeAdapter mergeAdapter = new MergeAdapter();
+
+                mergeAdapter.addAdapter(produits);
+                mergeAdapter.addAdapter(produits_striked);
+
+                listView.setAdapter(mergeAdapter);
 
                 /** Rayer les éléments dont l'attribut coche vaut 1 en base **/
 
