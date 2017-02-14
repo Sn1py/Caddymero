@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.jordan.mycaddy.R.id.container;
+import static com.example.jordan.mycaddy.R.id.supprimer;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -97,6 +98,9 @@ public class Produits extends Fragment {
         }
 
         setHasOptionsMenu(true);
+
+        suppressionBase();
+        insertionBase();
     }
 
     @Override
@@ -112,8 +116,6 @@ public class Produits extends Fragment {
     {
         // TODO Auto-generated method stub
         super.onActivityCreated(savedInstanceState);
-
-
 
         /** Spécification du ContextMenu **/
         ListView maVariableListView = (ListView) getActivity().findViewById(R.id.listView_ajouter_produit);
@@ -151,26 +153,28 @@ public class Produits extends Fragment {
                         final AlertDialog alertDialog = alertDialogBuilder.create();
 
                         // Création du Spinner
-                        final Spinner mSpinner= (Spinner) promptsView.findViewById(R.id.spinner);
-                        List<String> list = new ArrayList<String>();
-                        list.add("Catégorie 1");
-                        list.add("Catégorie 2");
-                        list.add("Catégorie 3");
-                        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, list);
-                        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        mSpinner.setAdapter(dataAdapter);
+                        final Spinner spinner_categories = (Spinner) promptsView.findViewById(R.id.spinner);
+
+                        // Récupérer les id des produits de la liste dont l'ID et celui de la liste actuelle
+                        Cursor categories = base.recupererCategories();
+
+                        // Ajout des produits dans la ListView
+                        getActivity().startManagingCursor(categories);
+                        String[] from_produits = new String[] { DB.KEY_NOM };
+                        int[] to_produits = new int[] { R.id.nom };
+                        SimpleCursorAdapter sca_categories = new SimpleCursorAdapter(getContext(), R.layout.produit_row, categories, from_produits, to_produits);
+                        spinner_categories.setAdapter(sca_categories);
 
                         // Définition du bouton d'ajout
                         final Button mButton = (Button) promptsView.findViewById(R.id.button);
 
                         // OnItemSelectedListener
-                        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        spinner_categories.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
                             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
 
                                 // Récupérer la catégorie du nouveau produit
                                 String categorie = parent.getItemAtPosition(pos).toString();
-
                             }
 
                             public void onNothingSelected(AdapterView<?> arg0) {
@@ -291,6 +295,29 @@ public class Produits extends Fragment {
         return id_liste_selectionnee;
     }
 
+    public void suppressionBase(){
+        base.supprimerLesCategories();
+        base.supprimerTousLesProduits();
+    }
+
+
+    public void insertionBase(){
+        insererCategories();
+        insererProduits();
+    }
+
+    public void insererCategories(){
+        base.ajouterCategorie("Fruits", "fruits");      // 1
+        base.ajouterCategorie("Legumes", "legumes");    // 2
+    }
+
+    public void insererProduits(){
+        base.ajouterProduit("Pomme", 1, "logo");
+        base.ajouterProduit("Poire", 1, "logo");
+        base.ajouterProduit("Carotte", 2, "logo");
+        base.ajouterProduit("Salade", 2, "logo");
+    }
+
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         MenuItem ajouter_liste = menu.findItem(R.id.ajouter_liste);
@@ -381,6 +408,7 @@ public class Produits extends Fragment {
         maVariableListView.setAdapter(notes);
 
     }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

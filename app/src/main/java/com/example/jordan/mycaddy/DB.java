@@ -65,6 +65,7 @@ public class DB {
             db.execSQL(DATABASE_CREATE_LISTES);
             db.execSQL(DATABASE_CREATE_ELEMENTS);
             db.execSQL(DATABASE_CREATE_PARAMETRES);
+
         }
 
         @Override
@@ -135,6 +136,10 @@ public class DB {
 
     public boolean supprimerCategoriesId(long id) {
         return mDb.delete(DATABASE_TABLE_CATEGORIES, KEY_ID + "=" + id, null) > 0;
+    }
+
+    public boolean supprimerLesCategories() {
+        return mDb.delete(DATABASE_TABLE_CATEGORIES, null, null) > 0;
     }
 
     public Cursor recupererCategories() {
