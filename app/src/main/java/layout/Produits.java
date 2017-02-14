@@ -250,8 +250,8 @@ public class Produits extends Fragment {
 
                         Cursor te = base.recupererProduitsParId(id_produit_selectionne);
                         te.moveToFirst();
-
-                        base.ajouterElement(id_produit_selectionne, te.getString(te.getColumnIndex(DB.KEY_NOM)), getIdListeSelectionnee(), 1, 0);
+                        String icone = "restaurant.png";
+                        base.ajouterElement(id_produit_selectionne, te.getString(te.getColumnIndex(DB.KEY_NOM)), getIdListeSelectionnee(), 1, 0, icone);
                         dialog.dismiss();
                     }
                 });
