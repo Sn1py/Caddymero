@@ -169,6 +169,7 @@ public class Liste extends Fragment {
                 int[] to_produits = new int[] { R.id.nom };
                 SimpleCursorAdapter produits = new SimpleCursorAdapter(getContext(), R.layout.produit_row, cursor, from_produits, to_produits);
 
+                /** Rayer les éléments dont l'attribut coche vaut 1 en base **/
                 getActivity().startManagingCursor(cursor_striked);
                 String[] from_produits_striked = new String[] { DB.KEY_ID_PRODUIT };
                 int[] to_produits_striked = new int[] { R.id.nom_sriked };
@@ -180,11 +181,6 @@ public class Liste extends Fragment {
                 mergeAdapter.addAdapter(produits_striked);
 
                 listView.setAdapter(mergeAdapter);
-
-                /** Rayer les éléments dont l'attribut coche vaut 1 en base **/
-
-                // Une fois que la listView est remplie, on envoie la ListView, la view et le cursor contenant les id des produits de la liste sélectionnée
-                cocherElements(listView, view, cursor);
             }
 
             public void onNothingSelected(AdapterView<?> arg0) {
@@ -229,7 +225,7 @@ public class Liste extends Fragment {
                 return true;
 
             case R.id.vider_element_barres:
-                // Fonction à créer
+                viderElementsCoches();
                 return true;
 
             default:
@@ -261,56 +257,6 @@ public class Liste extends Fragment {
         final Spinner spinner_listes = (Spinner) getActivity().findViewById(R.id.spinner_listes);
         SimpleCursorAdapter sca = new SimpleCursorAdapter(getContext(), android.R.layout.two_line_list_item, listes, new String[] {DB.KEY_NOM, DB.KEY_ID,}, new int[] {android.R.id.text1});
         spinner_listes.setAdapter(sca);
-    }
-
-    public void cocherElements(ListView lv, View v, Cursor c) {
-
-        // On met le cursor au début
-        c.moveToFirst();
-
-        for (int i = 0; i < c.getCount(); i++) {
-
-            // On récupère l'ID de chaque produit tour à tour
-            long id_produit = c.getLong(c.getColumnIndex(DB.KEY_ID_PRODUIT));
-
-            // On teste si le procduit est coché
-            boolean isCoche = base.isElementCoche(id_produit);
-
-            if(isCoche){
-                Toast.makeText(getContext(), "coche : " + id_produit, Toast.LENGTH_LONG).show();
-                View view = lv.getAdapter().getView(i, null, null);
-                TextView tv;
-                tv = (TextView) view;
-                Toast.makeText(getContext(), "texte : " + tv.getText().toString(), Toast.LENGTH_LONG).show();
-                // Le texte récupéré est bien celui à cocher, mais l'action n'est pas réalisée
-                tv.setPaintFlags(tv.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            }
-
-            c.moveToNext();
-
-            /*
-            View v;
-
-            TextView tv;
-            v = lv.getAdapter().getView(i, null, null);
-            tv = (TextView) v;
-            if(1 == 1) { // conditions liée à la bdd
-                tv.setPaintFlags(tv.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                Toast.makeText(getContext(), tv.getText(), Toast.LENGTH_LONG).show();
-                // Le toast fonctionne bien et affiche les éléments de la liste alors pourquoi ça barre pas ?
-            }
-            */
-
-
-
-
-
-            // 1 Je prends le premier élément de la listview => Il y a AUTANT d'éléments dans la ListVie que dans le Cursor
-            // 2 Je récupère son ID
-            // 3 Je regarde si il est coché grâce à la fonction isElementCoche()
-            // 4 Si oui je coche sinon je ne fais rien et je passe à l'élément suivant de la textview
-        }
-
     }
 
     public void ajouterListe(){
@@ -361,6 +307,32 @@ public class Liste extends Fragment {
             public void onClick(DialogInterface dialog, int id) {
                 c.moveToFirst();
                 base.viderListe(c.getInt(c.getColumnIndex(DB.KEY_ID_LISTE_ACTUELLE)));
+            }
+        });
+
+        builder.setNegativeButton(R.string.non, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        });
+
+        // 3. Get the AlertDialog from create()
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    public void viderElementsCoches(){
+        // 1. Instantiate an AlertDialog.Builder with its constructor
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+        // 2. Chain together various setter methods to set the dialog characteristics
+        builder.setMessage(R.string.dialog_vider_elements_coches).setTitle(R.string.dialog_title_elements_coches);
+
+        // Add the buttons
+        builder.setPositiveButton(R.string.oui, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                c.moveToFirst();
+                base.viderElementsCoches(c.getInt(c.getColumnIndex(DB.KEY_ID_LISTE_ACTUELLE)));
             }
         });
 

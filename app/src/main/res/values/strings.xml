@@ -17,4 +17,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="TextView_liste_vide">Veuillez sélectionner une liste dans votre gestionnaire de listes afin de consulter son contenu</string>
     <string name="ajouter_liste">Nouvelle liste</string>
+    <string name="dialog_vider_elements_coches">Voulez-vous vraiment supprimer les éléments cochés ?</string>
+    <string name="dialog_title_elements_coches">Supprimer éléments cochés</string>
 </resources>

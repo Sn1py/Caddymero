@@ -104,8 +104,8 @@ public class DB {
         return mDb.delete(DATABASE_TABLE_ELEMENTS, KEY_ID_LISTE + "=" + id_liste, null) > 0;
     }
 
-    public Cursor viderElementsCoches(long id_liste) {
-        return mDb.rawQuery("DELETE id_produit FROM elements WHERE (id_liste="+id_liste+"AND coche=1)", null);
+    public boolean viderElementsCoches(long id_liste) {
+        return mDb.delete(DATABASE_TABLE_ELEMENTS, "(" + KEY_ID_LISTE + "=" + id_liste + " AND coche=1)", null) > 0;
     }
 
     public boolean supprimerListeId(long id) {
