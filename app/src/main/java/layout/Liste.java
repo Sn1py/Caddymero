@@ -171,8 +171,8 @@ public class Liste extends Fragment {
 
                 /** Rayer les éléments dont l'attribut coche vaut 1 en base **/
                 getActivity().startManagingCursor(cursor_striked);
-                String[] from_produits_striked = new String[] { DB.KEY_NOM_PRODUIT };
-                int[] to_produits_striked = new int[] { R.id.nom_sriked };
+                String[] from_produits_striked = new String[] { DB.KEY_NOM_PRODUIT};
+                int[] to_produits_striked = new int[] { R.id.nom_sriked};
                 SimpleCursorAdapter produits_striked = new SimpleCursorAdapter(getContext(), R.layout.produit_row_striked, cursor_striked, from_produits_striked, to_produits_striked);
 
                 MergeAdapter mergeAdapter = new MergeAdapter();
@@ -194,8 +194,8 @@ public class Liste extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 TextView tv;
-                tv = (TextView) view;
-                tv.setPaintFlags(tv.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                //tv = (TextView) view;
+                //tv.setPaintFlags(tv.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 // Définition de l'élément comme coché en base de données
                 base.setElementCoche(id);
             }
