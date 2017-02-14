@@ -226,7 +226,17 @@ public class DB {
 
     public Cursor recupererElementsId(long id) {
         //return mDb.query(DATABASE_TABLE_ELEMENTS, new String[] {KEY_ID, KEY_LOGO}, null, new String[] {KEY_ID, String.valueOf(id)}, null, null, null);
-        return mDb.rawQuery("SELECT _id, id_produit FROM elements WHERE id_liste="+id,null);
+        return mDb.rawQuery("SELECT _id, id_produit FROM elements WHERE id_liste=" + id, null);
+    }
+    
+    public Cursor recupererElementsNonCochesId(long id) {
+        //return mDb.query(DATABASE_TABLE_ELEMENTS, new String[] {KEY_ID, KEY_LOGO}, null, new String[] {KEY_ID, String.valueOf(id)}, null, null, null);
+        return mDb.rawQuery("SELECT _id, id_produit FROM elements WHERE id_liste="+id+" AND coche=0",null);
+    }
+
+    public Cursor recupererElementsCochesId(long id) {
+        //return mDb.query(DATABASE_TABLE_ELEMENTS, new String[] {KEY_ID, KEY_LOGO}, null, new String[] {KEY_ID, String.valueOf(id)}, null, null, null);
+        return mDb.rawQuery("SELECT _id, id_produit FROM elements WHERE id_liste="+id+" AND coche=1",null);
     }
 
     public Cursor recupererNomsProduitsParElementsId(long id) {
