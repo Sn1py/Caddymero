@@ -13,7 +13,6 @@
         android:divider="@null"
         android:dividerHeight="0dp" />
 
-
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/ajouter_produit"
         android:layout_width="57dp"
