@@ -129,9 +129,7 @@ public class Produits extends Fragment {
 
             @Override
             public void onClick(View v) {
-                // Définition du onClickListener
-                ajouter_produit.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
+
 
                         LayoutInflater li = LayoutInflater.from(getContext());
                         // Récupérer la vue liée au xml de la fenêtre de dialogue
@@ -196,8 +194,7 @@ public class Produits extends Fragment {
                 });
 
                 actualiser();
-            }
-        });
+
 
 
         /** Intéraction au simple clic sur un item de la ListView **/
